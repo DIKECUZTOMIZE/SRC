@@ -1,0 +1,32 @@
+import { z } from "zod";
+
+export const registerSchema = z.object({
+  username: z
+    .string()
+    .trim()
+    .min(3, "Username must be at least 3 characters long"),
+
+  email: z
+    .string()
+    .email("Invalid email format")
+    .trim()
+    .toLowerCase(),
+
+  password: z
+    .string()
+    .trim()
+    .min(6, "Password must be at least 6 characters long"),
+});
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .email("Invalid email format")
+    .trim()
+    .toLowerCase(),
+
+  password: z
+    .string()
+    .trim()
+    .min(6, "Password must be at least 6 characters long"),
+});
