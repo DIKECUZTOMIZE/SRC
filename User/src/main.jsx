@@ -4,10 +4,15 @@ import { Provider } from "react-redux";
 import { store } from "./app/store/store.js";
 import AppRoutes from "./app/routes/AppRoutes.jsx";
 import { SocketProvider } from "./socket/socketContext.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
-    <SocketProvider>
-      <AppRoutes />
-    </SocketProvider>
+    <QueryClientProvider client={queryClient}>
+      <SocketProvider>
+        <AppRoutes />
+      </SocketProvider>
+    </QueryClientProvider>
   </Provider>,
 );

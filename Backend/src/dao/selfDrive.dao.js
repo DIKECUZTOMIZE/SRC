@@ -3,7 +3,7 @@ import selfDriveModel from "../model/selfDrive.model.js";
 class SelfDriveDAO {
     // Create Booking
     async create(data) {
-        console.log(data.user, "sdj");
+
         return await selfDriveModel.create(data);
     }
 
@@ -22,13 +22,7 @@ class SelfDriveDAO {
         return await selfDriveModel.findOne({ bookingId });
     }
 
-    // // Update Booking
-    // async updateById(id, updateData) {
-    //     return await selfDriveModel.findByIdAndUpdate(id, updateData, {
-    //         new: true,
-    //         runValidators: true,
-    //     });
-    // }
+
 
 
     // Find One Booking

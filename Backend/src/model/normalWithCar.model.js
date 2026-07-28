@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 const driverBookingSchema = new mongoose.Schema(
     {
-        // =====================================================
+
         // BOOKING INFORMATION
-        // =====================================================
         bookingId: {
             type: String,
             required: true,
@@ -17,9 +16,8 @@ const driverBookingSchema = new mongoose.Schema(
             default: "Car With Driver",
         },
 
-        // =====================================================
-        // CUSTOMER (LOGIN USER)
-        // =====================================================
+
+        // CUSTOMER LOGIN USER
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
@@ -27,9 +25,8 @@ const driverBookingSchema = new mongoose.Schema(
             index: true,
         },
 
-        // =====================================================
+
         // VEHICLE INFORMATION
-        // =====================================================
         vehicleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Vehicle",
@@ -37,8 +34,10 @@ const driverBookingSchema = new mongoose.Schema(
             index: true,
         },
 
+
         // Vehicle Snapshot
         vehicle: {
+
             brand: {
                 type: String,
                 required: true,
@@ -69,25 +68,39 @@ const driverBookingSchema = new mongoose.Schema(
                 required: true,
             },
 
+            image: {
+                type: String,
+                default: "",
+            },
+
+            vehicleNumber: {
+                type: String,
+                required: true,
+            },
+
             pricePerHour: {
                 type: Number,
-                required: true,
+                default: 0,
             },
 
             pricePerDay: {
                 type: Number,
-                required: true,
+                default: 0,
             },
         },
 
-        // =====================================================
+
         // BOOKING DETAILS
-        // =====================================================
+
         bookingType: {
             type: String,
-            enum: ["hour", "day"],
+            enum: [
+                "hour",
+                "day"
+            ],
             required: true,
         },
+
 
         quantity: {
             type: Number,
@@ -95,11 +108,31 @@ const driverBookingSchema = new mongoose.Schema(
             min: 1,
         },
 
+
+        // Package Rule
+        packageDetails: {
+
+            includedHours: {
+                type: Number,
+                default: 7,
+            },
+
+            graceMinutes: {
+                type: Number,
+                default: 30,
+            },
+        },
+
+
         tripType: {
             type: String,
-            enum: ["Local", "Outstation"],
+            enum: [
+                "Local",
+                "Outstation"
+            ],
             required: true,
         },
+
 
         pickupLocation: {
             type: String,
@@ -107,32 +140,41 @@ const driverBookingSchema = new mongoose.Schema(
             trim: true,
         },
 
+
         destination: {
             type: String,
             required: true,
             trim: true,
         },
 
+
         pickupDate: {
             type: Date,
             required: true,
         },
+
 
         pickupTime: {
             type: String,
             required: true,
         },
 
+
         timePeriod: {
             type: String,
-            enum: ["AM", "PM"],
+            enum: [
+                "AM",
+                "PM"
+            ],
             required: true,
         },
 
-        // =====================================================
+
+
         // CUSTOMER DETAILS
-        // =====================================================
+
         customer: {
+
             name: {
                 type: String,
                 required: true,
@@ -147,8 +189,8 @@ const driverBookingSchema = new mongoose.Schema(
             email: {
                 type: String,
                 required: true,
-                trim: true,
                 lowercase: true,
+                trim: true,
             },
 
             whatsapp: {
@@ -157,10 +199,12 @@ const driverBookingSchema = new mongoose.Schema(
             },
         },
 
-        // =====================================================
+
+
         // CUSTOMER ADDRESS
-        // =====================================================
+
         address: {
+
             currentAddress: {
                 type: String,
                 required: true,
@@ -187,10 +231,38 @@ const driverBookingSchema = new mongoose.Schema(
             },
         },
 
-        // =====================================================
-        // BOOKING AMOUNT
-        // =====================================================
-        baseAmount: {
+
+
+
+        // PRICE DETAILS
+        pricing: {
+            carHourRate: {
+                type: Number,
+                default: 0,
+            },
+
+            carDayRate: {
+                type: Number,
+                default: 0,
+            },
+
+            driverDayRate: {
+                type: Number,
+                default: 0,
+            },
+
+            extraHourRate: {
+                type: Number,
+                default: 0,
+            },
+        },
+        // Calculated Amounts
+        carAmount: {
+            type: Number,
+            required: true,
+        },
+
+        driverAmount: {
             type: Number,
             required: true,
         },
@@ -205,32 +277,43 @@ const driverBookingSchema = new mongoose.Schema(
             required: true,
         },
 
-        // =====================================================
-        // PAYMENT INFORMATION
-        // =====================================================
+
+        // PAYMENT
+
         paymentMethod: {
             type: String,
-            enum: ["Cash", "Online"],
+            enum: [
+                "Cash",
+                "Online"
+            ],
             required: true,
         },
 
+
         paymentStatus: {
             type: String,
-            enum: ["Pending", "Paid", "Failed", "Refunded"],
+            enum: [
+                "Pending",
+                "Paid",
+                "Failed",
+                "Refunded"
+            ],
             default: "Pending",
         },
 
-        // =====================================================
+
+
         // DRIVER ASSIGNMENT
-        // =====================================================
+
         assignedDriver: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Driver",
             default: null,
         },
 
-        // Driver Snapshot
+
         driver: {
+
             name: {
                 type: String,
                 default: "",
@@ -253,9 +336,42 @@ const driverBookingSchema = new mongoose.Schema(
         },
 
 
-        // =====================================================
-        // BOOKING STATUS
-        // =====================================================
+        assignedAt: {
+            type: Date,
+            default: null,
+        },
+
+
+
+        // RIDE STATUS
+
+        rideStatus: {
+            type: String,
+            enum: [
+                "Not Started",
+                "Ongoing",
+                "Completed",
+                "Cancelled"
+            ],
+            default: "Not Started",
+        },
+
+
+        tripStartTime: {
+            type: Date,
+            default: null,
+        },
+
+
+        tripEndTime: {
+            type: Date,
+            default: null,
+        },
+
+
+
+        // ADMIN BOOKING STATUS
+
         bookingStatus: {
             type: String,
             enum: [
@@ -263,55 +379,67 @@ const driverBookingSchema = new mongoose.Schema(
                 "Approved",
                 "Rejected",
                 "Completed",
-                "Cancelled",
+                "Cancelled"
             ],
             default: "Pending",
             index: true,
         },
+
 
         adminRemark: {
             type: String,
             default: "",
         },
 
-        acceptedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            default: null,
-        },
 
-        acceptedAt: {
-            type: Date,
-            default: null,
-        },
 
-        // =====================================================
-        // CANCELLATION DETAILS
-        // =====================================================
+        // CANCELLATION
+
         cancelReason: {
             type: String,
             default: "",
         },
 
+
         cancelledBy: {
             type: String,
-            enum: ["Customer", "Admin"],
+            enum: [
+                "Customer",
+                "Admin"
+            ],
             default: null,
         },
+
 
         cancelledAt: {
             type: Date,
             default: null,
         },
+
+
     },
     {
         timestamps: true,
     }
 );
 
+
+
+driverBookingSchema.index({
+    user: 1,
+    createdAt: -1
+});
+
+
+driverBookingSchema.index({
+    assignedDriver: 1
+});
+
+
 const DriverBookingModel = mongoose.model(
     "DriverBooking",
     driverBookingSchema
 );
+
 
 export default DriverBookingModel;
