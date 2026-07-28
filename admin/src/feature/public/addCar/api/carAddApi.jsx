@@ -1,39 +1,52 @@
 import axiosInstance from "../../../../config/axiosInstance";
 
-// CREATE CAR
+// COMMON MULTIPART CONFIG
+
+const multipartConfig = {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+  withCredentials: true,
+};
+
+// CREATE VEHICLE
 
 export const CreateCarApi = async (formData) => {
   try {
-    const response = await axiosInstance.post("/carAdd/create-car", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      withCredentials: true,
-    });
+    const { data } = await axiosInstance.post(
+      "/carAdd/create-car",
+      formData,
+      multipartConfig,
+    );
 
-    return response.data;
+    return data;
   } catch (error) {
-    console.log("CREATE CAR ERROR:", error.response?.data);
+    console.error(
+      "CREATE VEHICLE ERROR:",
+      error.response?.data || error.message,
+    );
 
     throw error;
   }
 };
 
-// UPDATE CAR
+// UPDATE VEHICLE
 
 export const UpdateCarApi = async (id, formData) => {
   try {
-    const response = await axiosInstance.put(
+    const { data } = await axiosInstance.put(
       `/carAdd/update-car/${id}`,
       formData,
-      {
-        withCredentials: true,
-      },
+      multipartConfig,
     );
 
-    return response.data;
+    return data;
   } catch (error) {
-    console.log("UPDATE CAR ERROR:", error.response?.data);
+    console.error(
+      "UPDATE VEHICLE ERROR:",
+      error.response?.data || error.message,
+    );
+
     throw error;
   }
 };

@@ -1,12 +1,16 @@
 import express from 'express'
 import asyncHandler from "../../../shared/utils/asyncHandle.js";
 import { driverBookingSchema } from '../../../schema/normalDriver.schema.js'
-import { createBooking } from './normalCarWithDriver.controller.js';
+import { createBooking, getAllCarsController } from './normalCarWithDriver.controller.js';
 import { authMiddleware } from '../../../middleware/auth.middleware.js';
 import { validate } from '../../../validator/validate .js';
 
 const router = express.Router();
 
+// Get all cars for Car With Driver
+router.get(
+    "/cars", authMiddleware, asyncHandler(getAllCarsController)
+);
 
 // Create Booking (User)
 router.post(

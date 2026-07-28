@@ -11,13 +11,13 @@ import {
 } from "lucide-react";
 import { useLocation } from "react-router";
 import { useForm } from "react-hook-form";
-import useCarWithDriver from "../../hook/useCarWithDriver";
+import useCarWithDriverBooking from "../../hook/useCarWithDriverBooking";
 const DriverBookingForm = () => {
   // const location = useLocation();
 
   // const car = location.state?.car;
   const { car, register, handleSubmit, errors, onSubmit, bookingMutation } =
-    useCarWithDriver();
+    useCarWithDriverBooking();
   return (
     <>
       <div>

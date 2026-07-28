@@ -81,7 +81,7 @@ const Navbar = () => {
             {[
               { name: "Home", path: "/home", end: true },
               { name: "About", path: "about" },
-              { name: "Car List", path: "carList" },
+              { name: "Add Car", path: "add-car" },
               { name: "Order", path: "order" },
               { name: "Terms", path: "termsAndCondition" },
             ].map((item) => (

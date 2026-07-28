@@ -12,22 +12,42 @@ import {
 import { useNavigate, useLocation } from "react-router";
 
 const SERVICES = [
-  { id: 1, icon: Car, name: "Self Drive", path: "self-drive" },
-  { id: 2, icon: Car, name: "Car with Drive", path: "car-with-drive" },
+  {
+    id: 1,
+    icon: Car,
+    name: "Self Drive Cars & Mini Trucks",
+    path: "self-drive",
+  },
+  {
+    id: 2,
+    icon: Car,
+    name: "Car & Mini Truck with Driver",
+    path: "car-with-driver",
+  },
   {
     id: 3,
-    icon: Bus,
-    name: "Tempo Traveller Bus",
-    path: "tempo-traveller-bus",
+    icon: Car,
+    name: "Premium Car with Driver",
+    path: "premium-with-car",
   },
   {
     id: 4,
-    icon: MapPin,
-    name: "Mini Trucks / Goods Carrier",
-    path: "goods-carrier",
+    icon: Bus,
+    name: "Tempo Traveller & Buses",
+    path: "tempo-traveller-bus",
   },
-  { id: 5, icon: Plane, name: "Airport Transfer", path: "airport" },
-  { id: 6, icon: HeartHandshake, name: "Wedding Cars", path: "wedding" },
+  {
+    id: 5,
+    icon: Plane,
+    name: "Airport Transfers",
+    path: "airport",
+  },
+  {
+    id: 6,
+    icon: HeartHandshake,
+    name: "Wedding Car With Decoration",
+    path: "wedding",
+  },
 ];
 
 const ChooseCar = () => {

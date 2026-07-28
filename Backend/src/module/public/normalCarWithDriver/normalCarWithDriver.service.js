@@ -1,10 +1,29 @@
 
-
-import normalWithDriver from "../../../dao/normalWithDriver.js";
+import normalWithDriverDao from "../../../dao/normalWithDriver.js";
 import AddCarModel from "../../../model/carAdd.model.js";
 import { calculateBookingAmount } from "../../../shared/utils/calculateBookingAmount.js";
 import { getIO } from "../../../socket/server.socket.js";
 
+import { StatusCodes } from "http-status-codes";
+
+
+// get all cars
+export const getAllCarsService = async () => {
+    const filter = {
+        category: "With Driver",
+        status: "Available",
+    };
+    console.log("FILTER:", filter);
+
+    const cars = await normalWithDriverDao.getAllCarsDao(filter);
+
+    console.log("CARS FROM DB:", cars);
+    return cars
+};
+
+
+
+// create
 export const createBookingService = async (data) => {
 
     // Check Car
@@ -50,7 +69,7 @@ export const createBookingService = async (data) => {
 
     Object.assign(data, calculation);
     // Save Booking
-    const booking = await normalWithDriver.create(data);
+    const booking = await normalWithDriverDao.create(data);
 
     // Notify Admin
     const io = getIO();

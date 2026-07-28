@@ -1,26 +1,33 @@
+
+import AddCarModel from "../model/carAdd.model.js";
 import DriverBookingModel from "../model/normalWithCar.model.js";
 
-
 class NormalWithDriverDao {
+    async getAllCarsDao(filter) {
+        return await AddCarModel.find(filter)
+            .sort({ createdAt: -1 })
+            .lean();
+    }
 
     async createBookingDao(payload) {
-        return DriverBookingModel.create(payload);
+        return await DriverBookingModel.create(payload);
     }
 
     async getAllBookingsDao() {
-        return DriverBookingModel.find().sort({ createdAt: -1 });
+        return await DriverBookingModel.find().sort({ createdAt: -1 });
     }
 
     async getBookingByIdDao(id) {
-        return DriverBookingModel.findById(id);
+        return await DriverBookingModel.findById(id);
     }
 
     async getUserBookingsDao(userId) {
-        return DriverBookingModel.find({ user: userId }).sort({ createdAt: -1 });
+        return await DriverBookingModel.find({ user: userId })
+            .sort({ createdAt: -1 });
     }
 
     async updateBookingDao(id, payload) {
-        return DriverBookingModel.findByIdAndUpdate(
+        return await DriverBookingModel.findByIdAndUpdate(
             id,
             payload,
             { new: true }
@@ -28,9 +35,8 @@ class NormalWithDriverDao {
     }
 
     async deleteBookingDao(id) {
-        return DriverBookingModel.findByIdAndDelete(id);
+        return await DriverBookingModel.findByIdAndDelete(id);
     }
-
 }
 
 export default new NormalWithDriverDao();
