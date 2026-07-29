@@ -6,7 +6,7 @@ import { getAllPremiumCarsService } from "./premiumWithCar.service.js";
 export const getAllPremiumCars = async (req, res) => {
 
     const vehicles = await getAllPremiumCarsService();
-
+    console.log('ram')
     return buildSuccessResponse(
         res,
         "Premium cars fetched successfully",

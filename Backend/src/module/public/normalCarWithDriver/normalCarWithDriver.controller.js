@@ -17,33 +17,66 @@ export const getAllCarsController = async (req, res) => {
 
 
 // Create Driver Booking
-export const createBooking = async (req, res) => {
-    console.log('rbjhgbj')
+export const createDriverBooking = async (req, res) => {
+
+
     try {
 
-        // data add karna hota multiple esa lena ho tu object banata hei
+
         const bookingData = {
+
             ...req.body,
-            bookingId: `DRV-${nanoid(8)}`,
+
+
+            bookingId: `CD-${nanoid(8)}`,
+
+
             user: req.user?.userId || null,
+
         };
 
-        // service meh object veja
-        const booking = await createBookingService(bookingData);
 
-        // response veja
+
+        const booking =
+            await createDriverBookingService(bookingData);
+
+
+
         return buildSuccessResponse(
-            res,
-            "Driver booking created successfully",
-            StatusCodes.CREATED,
-            booking
-        );
-    } catch (error) {
-        console.error("createBooking:", error);
 
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            res,
+
+            "Car with driver booking created successfully",
+
+            StatusCodes.CREATED,
+
+            booking
+
+        );
+
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Driver Booking Error:",
+            error
+        );
+
+
+        return res.status(
+            error.statusCode || 500
+        ).json({
+
             success: false,
-            message: error.message,
+
+            message: error.message
+
         });
+
+
     }
+
+
 };

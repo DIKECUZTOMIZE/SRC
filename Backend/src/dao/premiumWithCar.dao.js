@@ -1,6 +1,6 @@
 import AddCarModel from "../model/carAdd.model.js";
 
- 
+
 class PremiumCarDao {
 
     async findAll(filter) {

@@ -1,7 +1,7 @@
 import express from 'express'
 import asyncHandler from "../../../shared/utils/asyncHandle.js";
 import { driverBookingSchema } from '../../../schema/normalDriver.schema.js'
-import { createBooking, getAllCarsController } from './normalCarWithDriver.controller.js';
+import { createDriverBooking, getAllCarsController } from './normalCarWithDriver.controller.js';
 import { authMiddleware } from '../../../middleware/auth.middleware.js';
 import { validate } from '../../../validator/validate .js';
 
@@ -17,9 +17,9 @@ router.post(
     "/book",
     authMiddleware,
     validate(driverBookingSchema),
-    asyncHandler(createBooking)
+    asyncHandler(createDriverBooking)
 );
-
+;
 
 // Get All Bookings (Admin)
 // router.get(

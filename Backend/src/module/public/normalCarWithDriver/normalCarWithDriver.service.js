@@ -13,11 +13,10 @@ export const getAllCarsService = async () => {
         category: "With Driver",
         status: "Available",
     };
-    console.log("FILTER:", filter);
+
 
     const cars = await normalWithDriverDao.getAllCarsDao(filter);
 
-    console.log("CARS FROM DB:", cars);
     return cars
 };
 

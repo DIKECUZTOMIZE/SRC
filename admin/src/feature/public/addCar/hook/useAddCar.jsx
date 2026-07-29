@@ -21,39 +21,70 @@ export const useCarForm = (id) => {
       status: "Available",
       showDecoration: false,
       vehicleType: "",
+      decorationType: "",
+      decorationName: "",
+      decorationPrice: 0,
     },
   });
 
   const [loading, setLoading] = useState(false);
 
+  // Existing Images
+  const [existingImage, setExistingImage] = useState("");
+  const [existingDecorationImages, setExistingDecorationImages] = useState([]);
+
   const isEdit = Boolean(id);
 
-  // FETCH VEHICLE DETAILS (EDIT MODE)
+  // ===========================
+  // FETCH VEHICLE DETAILS
+  // ===========================
+
   const fetchCar = useCallback(async () => {
     try {
       const response = await GetCarDetailsApi(id);
 
       const car = response.data?.data || response.data;
 
-      const { image, decorationImages, ...rest } = car;
+      // Existing Images
+      setExistingImage(car.image || "");
+      setExistingDecorationImages(car.decorationImages || []);
 
       reset({
-        ...rest,
-        vehicleType: rest.vehicleType || "",
-        seats: Number(rest.seats || 0),
+        category: car.category || "Self Drive",
 
-        pricePerHour: Number(rest.pricePerHour || 0),
-        pricePerDay: Number(rest.pricePerDay || 0),
+        vehicleType: car.vehicleType || "",
 
-        driverChargePerDay: Number(rest.driverChargePerDay || 0),
+        brand: car.brand || "",
+        model: car.model || "",
+        classification: car.classification || "",
 
-        pickupPrice: Number(rest.pickupPrice || 0),
-        dropPrice: Number(rest.dropPrice || 0),
-        roundTripPrice: Number(rest.roundTripPrice || 0),
+        fuel: car.fuel || "",
+        transmission: car.transmission || "",
 
-        decorationPrice: Number(rest.decorationPrice || 0),
+        seats: Number(car.seats || 0),
 
-        showDecoration: rest.showDecoration || false,
+        description: car.description || "",
+
+        pricePerHour: Number(car.pricePerHour || 0),
+        pricePerDay: Number(car.pricePerDay || 0),
+
+        driverChargePerDay: Number(car.driverChargePerDay || 0),
+
+        loadingCapacity: car.loadingCapacity || "",
+
+        pickupPrice: Number(car.pickupPrice || 0),
+        dropPrice: Number(car.dropPrice || 0),
+        roundTripPrice: Number(car.roundTripPrice || 0),
+
+        showDecoration: Boolean(car.showDecoration),
+
+        decorationType: car.decorationType || "",
+
+        decorationName: car.decorationName || "",
+
+        decorationPrice: Number(car.decorationPrice || 0),
+
+        status: car.status || "Available",
       });
     } catch (error) {
       console.error(
@@ -69,7 +100,10 @@ export const useCarForm = (id) => {
     }
   }, [id, fetchCar]);
 
+  // ===========================
   // FILE HELPERS
+  // ===========================
+
   const appendSingleFile = (formData, key, data) => {
     if (formData[key]?.length) {
       data.append(key, formData[key][0]);
@@ -84,17 +118,20 @@ export const useCarForm = (id) => {
     });
   };
 
-  // CREATE / UPDATE VEHICLE
+  // ===========================
+  // CREATE / UPDATE
+  // ===========================
+
   const onSubmit = async (formData) => {
     try {
       setLoading(true);
 
       const data = new FormData();
 
-      // Single Image
+      // Main Image
       appendSingleFile(formData, "image", data);
 
-      // Multiple Decoration Images
+      // Decoration Images
       appendMultipleFiles(formData, "decorationImages", data);
 
       // Other Fields
@@ -128,6 +165,10 @@ export const useCarForm = (id) => {
           category: "Self Drive",
           status: "Available",
           showDecoration: false,
+          vehicleType: "",
+          decorationType: "",
+          decorationName: "",
+          decorationPrice: 0,
         });
 
         navigate(`/dashboard/cars/details/${newId}`);
@@ -146,8 +187,6 @@ export const useCarForm = (id) => {
     }
   };
 
-  // RETURN
-
   return {
     register,
     handleSubmit,
@@ -156,5 +195,8 @@ export const useCarForm = (id) => {
     onSubmit,
     loading,
     isEdit,
+
+    existingImage,
+    existingDecorationImages,
   };
 };

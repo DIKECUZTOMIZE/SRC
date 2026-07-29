@@ -7,8 +7,10 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import AirportPriceCard from "./AirportPriceCard";
-
+import { useNavigate } from "react-router";
 const AirportCarCard = ({ car }) => {
+  const navigate = useNavigate();
+
   const imageUrl = car?.image
     ? `http://localhost:3000${car.image}`
     : "https://placehold.co/600x400";
@@ -87,18 +89,21 @@ gap-2 mt-4
           </div>
         </div>
 
+        {/* Button */}
         <button
-          className="
-w-full mt-5
-bg-blue-600
-text-white
-py-3 rounded-xl
-font-semibold
-flex justify-center
-gap-2
-"
+          onClick={() =>
+            navigate("/home/airportBookingForm", {
+              state: { car },
+            })
+          }
+          disabled={car.status !== "Available"}
+          className={`w-full mt-5 flex items-center justify-center gap-2 py-3 rounded-xl font-semibold transition ${
+            car.status === "Available"
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
+              : "bg-gray-300 text-gray-600 cursor-not-allowed"
+          }`}
         >
-          Book Airport Transfer
+          {car.status === "Available" ? "Book Airport Transfer" : car.status}
           <ArrowUpRight size={18} />
         </button>
       </div>

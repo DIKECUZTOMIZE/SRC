@@ -3,37 +3,125 @@ import { buildSuccessResponse } from "../../../shared/utils/buildSuccessResponse
 import { updateBookingStatusService, createBookingService, getBookingService, getBookingsService, getMyBookingService, getMyBookingStatusListService, getMyBookingStatusDetailsService, deleteBookingService, updateBookingService } from "./selfDrive.service.js";
 import { StatusCodes } from "http-status-codes";
 import { nanoid } from "nanoid";
+import AddCarModel from "../../../model/carAdd.model.js";
+import SelfDriveDao from "../../../dao/SelfDrive.dao.js";
+import { getIO } from "../../../socket/server.socket.js";
 
-// create user first booking
-export const createBooking = async (req, res) => {
-
-
-  try {
-
-    const bookingData = {
-      ...req.body,
-      bookingId: `SD-${nanoid(8)}`,
-      user: req.user?.userId || null,
-    };
+// Create Self Drive Booking
+export const createBookingService = async (data) => {
 
 
-    const booking = await createBookingService(bookingData);
+  const car = await AddCarModel.findById(
+    data.vehicleId
+  );
 
-    return buildSuccessResponse(
-      res,
-      "Booking created successfully",
-      StatusCodes.CREATED,
-      booking,
-    );
 
-  } catch (error) {
-    console.error("controller:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message
-    });
+  if (!car) {
+    throw new Error("Car not found");
   }
+
+
+
+  // Vehicle Snapshot
+
+  data.vehicle = {
+
+    brand: car.brand,
+
+    model: car.model,
+
+    fuel: car.fuel,
+
+    transmission: car.transmission,
+
+    seats: car.seats,
+
+    classification: car.classification,
+
+    image: car.image,
+
+    vehicleNumber: car.vehicleNumber || "",
+
+    pricePerHour: car.pricePerHour,
+
+    pricePerDay: car.pricePerDay,
+
+  };
+
+
+
+
+
+  // Package Snapshot
+
+  data.packageDetails = {
+
+    includedHours: 7,
+
+    graceMinutes: 30,
+
+    billingRule: "Extra Hour"
+
+  };
+
+
+
+
+
+  // Pricing Snapshot
+
+  data.pricing = {
+
+    hourRate: car.pricePerHour,
+
+    dayRate: car.pricePerDay,
+
+    extraHourRate: 300,
+
+  };
+
+
+
+
+
+  const calculation =
+    calculateBookingAmount({
+
+      bookingType: data.bookingType,
+
+      quantity: data.quantity,
+
+      vehicle: data.vehicle,
+
+    });
+
+
+
+  Object.assign(
+    data.pricing,
+    calculation
+  );
+
+
+
+  const booking =
+    await SelfDriveDao.create(data);
+
+
+
+
+  const io = getIO();
+
+
+  io.to("admins").emit(
+    "new-self-drive-booking",
+    booking
+  );
+
+
+
+  return booking;
+
 };
 
 // booking list(admin)

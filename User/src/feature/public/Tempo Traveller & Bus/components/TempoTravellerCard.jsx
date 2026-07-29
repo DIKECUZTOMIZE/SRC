@@ -1,6 +1,7 @@
 import React from "react";
 import { Users, Fuel, Settings, Snowflake, ArrowUpRight } from "lucide-react";
 import TempoPriceCard from "./TempoPriceCard";
+import { WHATSAPP_NUMBER } from "../../../../config/contact";
 
 const TempoTravellerCard = ({ vehicle }) => {
   const imageUrl = vehicle.image
@@ -24,7 +25,7 @@ I want enquiry.
 `;
 
     window.open(
-      `https://wa.me/91XXXXXXXXXX?text=${encodeURIComponent(msg)}`,
+      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,
       "_blank",
     );
   };

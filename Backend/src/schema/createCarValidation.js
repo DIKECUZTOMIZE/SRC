@@ -213,9 +213,7 @@ export const createCarValidation = z
 
 
 
-    // =====================
     // TEMPO / BUS VALIDATION
-    // =====================
 
     if (data.category === "Tempo Traveller & Bus") {
 
@@ -272,9 +270,7 @@ export const createCarValidation = z
 
 
 
-    // =====================
     // WITH DRIVER
-    // =====================
 
     if (
       data.category === "With Driver" &&
@@ -293,9 +289,7 @@ export const createCarValidation = z
 
 
 
-    // =====================
     // PICKUP / MINI TRUCK
-    // =====================
 
     if (
       (
@@ -318,9 +312,7 @@ export const createCarValidation = z
 
 
 
-    // =====================
     // AIRPORT TRANSFER
-    // =====================
 
 
     if (data.category === "Airport Transfer") {
@@ -368,56 +360,34 @@ export const createCarValidation = z
 
 
 
-    // =====================
     // WEDDING
-    // =====================
 
 
-    if (
-      data.category === "Wedding Car" &&
-      data.showDecoration
-    ) {
+    if (data.category === "Wedding Car") {
 
-
-      if (!data.decorationType) {
-
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["decorationType"],
-          message: "Decoration Type is required",
-        });
-
-      }
-
-
-
-      if (!data.decorationName) {
-
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ["decorationName"],
-          message: "Decoration Name is required",
-        });
-
-      }
-
-
+      // Decoration fields are optional
 
       if (
-        !data.decorationPrice ||
-        data.decorationPrice <= 0
+        data.decorationPrice !== undefined &&
+        data.decorationPrice < 0
       ) {
-
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["decorationPrice"],
-          message: "Decoration Price is required",
+          message: "Decoration Price cannot be negative",
         });
-
       }
 
-
     }
+
+
+
+
+
+
+
+
+
 
 
 

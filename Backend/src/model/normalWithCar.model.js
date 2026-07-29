@@ -109,21 +109,9 @@ const driverBookingSchema = new mongoose.Schema(
         },
 
 
-        // Package Rule
-        packageDetails: {
-
-            includedHours: {
-                type: Number,
-                default: 7,
-            },
-
-            graceMinutes: {
-                type: Number,
-                default: 30,
-            },
-        },
 
 
+        // Trip details
         tripType: {
             type: String,
             enum: [
@@ -171,6 +159,30 @@ const driverBookingSchema = new mongoose.Schema(
 
 
 
+        // package details
+        packageDetails: {
+
+            includedHours: {
+                type: Number,
+                default: 7,
+            },
+
+            graceMinutes: {
+                type: Number,
+                default: 30,
+            },
+
+            billingRule: {
+                type: String,
+                enum: [
+                    "Extra Hour",
+                    "Next Day"
+                ],
+                default: "Extra Hour",
+            },
+
+
+        },
         // CUSTOMER DETAILS
 
         customer: {
@@ -254,7 +266,8 @@ const driverBookingSchema = new mongoose.Schema(
             extraHourRate: {
                 type: Number,
                 default: 0,
-            },
+            }
+
         },
         // Calculated Amounts
         carAmount: {
@@ -329,10 +342,6 @@ const driverBookingSchema = new mongoose.Schema(
                 default: "",
             },
 
-            licenseNumber: {
-                type: String,
-                default: "",
-            },
         },
 
 
@@ -354,19 +363,9 @@ const driverBookingSchema = new mongoose.Schema(
                 "Cancelled"
             ],
             default: "Not Started",
+            index: true
         },
 
-
-        tripStartTime: {
-            type: Date,
-            default: null,
-        },
-
-
-        tripEndTime: {
-            type: Date,
-            default: null,
-        },
 
 
 
@@ -385,12 +384,39 @@ const driverBookingSchema = new mongoose.Schema(
             index: true,
         },
 
+        // ADMIN NOTE
 
-        adminRemark: {
+        note: {
             type: String,
             default: "",
         },
 
+
+
+
+        // CANCELLATION POLICY
+        cancellationPolicy: {
+
+            allowedBeforeHours: {
+                type: Number,
+                default: 6,
+            },
+
+            cancellationCharge: {
+                type: Number,
+                default: 500,
+            },
+
+            cancellationChargeType: {
+                type: String,
+                enum: [
+                    "Fixed",
+                    "Percentage"
+                ],
+                default: "Fixed",
+            }
+
+        },
 
 
         // CANCELLATION
@@ -399,8 +425,6 @@ const driverBookingSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
-
-
         cancelledBy: {
             type: String,
             enum: [
@@ -410,11 +434,23 @@ const driverBookingSchema = new mongoose.Schema(
             default: null,
         },
 
-
         cancelledAt: {
             type: Date,
             default: null,
         },
+        cancelAmount: {
+            type: Number,
+            default: 0,
+        },
+
+        refundAmount: {
+            type: Number,
+            default: 0,
+        },
+
+
+
+
 
 
     },
@@ -430,9 +466,16 @@ driverBookingSchema.index({
     createdAt: -1
 });
 
-
 driverBookingSchema.index({
     assignedDriver: 1
+});
+
+driverBookingSchema.index({
+    bookingStatus: 1
+});
+
+driverBookingSchema.index({
+    rideStatus: 1
 });
 
 

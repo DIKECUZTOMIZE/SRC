@@ -6,5 +6,5 @@ export const getAllPremiumCarsService = async () => {
         status: "Available",
     };
 
-    return await premiumWithCarDao.getAllCarsDao(filter);
+    return await premiumWithCarDao.findAll(filter);
 };

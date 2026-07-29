@@ -9,8 +9,8 @@ import selfDriveRoutes from "./module/public/selfDrive/selfDrive.routes.js";
 import carRouter from "./module/public/addCar/addCar.routes.js";
 import normalWhitDriverRouter from "./module/public/normalCarWithDriver/normalCarWithDriver.routes.js";
 import tempoTravellerBusRoute from "./module/public/tempoTravellerBus/tempoTravellerBusRoute.routes.js";
-import airportTransferRoute from "./module/public/premiumWithCar/premiumWithCar.routes.js"
-import premiumCarRoute from "./module/public/airportTransfer/airportTransfer.routes.js"
+import airportTransferRoute from "./module/public/airportTransfer/airportTransfer.routes.js"
+import premiumCarRoute from "./module/public/premiumWithCar/premiumWithCar.routes.js"
 import weddingCarRoute from "./module/public/wedding/wedding.routes.js"
 
 const createApp = () => {

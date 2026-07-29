@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 const WeddingPriceCard = ({ pricePerHour, pricePerDay }) => {
@@ -27,7 +28,7 @@ flex
 justify-between
 "
       >
-        <div>
+        {/* <div>
           <p
             className="
 text-xs
@@ -45,7 +46,7 @@ text-pink-600
           >
             ₹{pricePerHour || 0}
           </h3>
-        </div>
+        </div> */}
 
         <div>
           <p

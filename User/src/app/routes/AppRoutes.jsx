@@ -32,6 +32,7 @@ import TempoTravellerBus from "../../feature/public/Tempo Traveller & Bus/page/T
 import Wedding from "../../feature/public/wedding/ui/page/Wedding";
 import About from "../../feature/public/about/ui/page/About";
 import PremiumWithCar from "../../feature/public/premiumCarwithDriver/ui/page/PremiumWithCar";
+import AirportCarForm from "../../feature/public/Airport Transfer/ui/components/AirportCarForm";
 
 const router = createBrowserRouter([
   // =========================
@@ -106,12 +107,16 @@ const router = createBrowserRouter([
           // Premium
           {
             path: "premium-with-car",
-            element: <PremiumWithCar/>,
+            element: <PremiumWithCar />,
           },
           // Airport
           {
             path: "airport",
             element: <AirportTransfer />,
+          },
+          {
+            path: "airportBookingForm",
+            element: <AirportCarForm />,
           },
 
           // Tempo Traveller

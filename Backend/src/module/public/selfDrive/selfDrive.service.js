@@ -1,19 +1,42 @@
-import SelfDriveDao from "../../../dao/SelfDrive.dao.js";
+import selfDriveDao from "../../../dao/SelfDrive.dao.js";
 import { AppError } from "../../../shared/error/appError.js";
 import { getIO } from "../../../socket/server.socket.js";
 
 // user form
+
 export const createBookingService = async (data) => {
-  // Save Booking using DAO
-  const booking = await SelfDriveDao.create(data);
 
-  // Socket instance
-  const io = getIO();
+  try {
 
-  // Send notification to admin room
-  io.to("admins").emit("new-booking", booking);
+    const booking = await selfDriveDao.create(data);
 
-  return booking;
+
+    const io = getIO();
+
+
+    io.to("admins").emit(
+      "new-booking",
+      {
+        type: "Self Drive",
+        booking
+      }
+    );
+
+
+    return booking;
+
+
+  } catch (error) {
+
+    console.error(
+      "Self Drive Service Error:",
+      error
+    );
+
+    throw error;
+
+  }
+
 };
 
 // admin get data
