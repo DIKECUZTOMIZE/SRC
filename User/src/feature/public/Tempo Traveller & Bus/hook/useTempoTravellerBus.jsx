@@ -9,7 +9,7 @@ const useTempoTravellerBus = () => {
   });
 
   return {
-    vehicles: data?.data || [],
+    cars: data?.data || [],
 
     isLoading,
 

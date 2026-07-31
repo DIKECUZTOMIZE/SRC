@@ -18,7 +18,7 @@ const createApp = () => {
   const app = express();
 
 
-  if (env.NODE_ENV === "development") {
+  if (env.NODE_ENV === "production") {
     app.use(morgan("dev"));
   }
 

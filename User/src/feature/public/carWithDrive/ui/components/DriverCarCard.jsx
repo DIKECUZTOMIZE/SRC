@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router";
 
- import DriverPriceCard from './DriverPriceCard'
+import DriverPriceCard from "./DriverPriceCard";
 
 const DriverCarCard = ({ car }) => {
   const navigate = useNavigate();
@@ -98,7 +98,7 @@ const DriverCarCard = ({ car }) => {
         {/* Button */}
         <button
           onClick={() =>
-            navigate("/home/driveBookingForm", {
+            navigate("/home/car-with-driver", {
               state: { car },
             })
           }

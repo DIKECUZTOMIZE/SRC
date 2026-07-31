@@ -1,5 +1,6 @@
 import airportTransferDao from "../../../dao/airportTransfer.dao.js";
 import AddCarModel from "../../../model/carAdd.model.js";
+import { calculateAirportAmount } from "../../../shared/utils/calculateAirportAmount.js";
 import { getIO } from "../../../socket/server.socket.js";
 
 export const getAllAirportTransferService = async () => {
@@ -34,9 +35,10 @@ export const createAirportTransferBookingService = async (data) => {
 
 
 
-
+    // vehicle snapshot
 
     data.vehicle = {
+
 
         brand: car.brand,
 
@@ -54,14 +56,37 @@ export const createAirportTransferBookingService = async (data) => {
 
         basePrice: car.price || 0
 
+
     };
 
 
 
 
+    // calculate price
 
 
-    // Pricing Snapshot
+    const calculation =
+        calculateAirportAmount({
+
+
+            tripType: data.tripType,
+
+
+            pickupPrice:
+                car.airportPickupPrice || 0,
+
+
+            dropPrice:
+                car.airportDropPrice || 0,
+
+
+            roundTripPrice:
+                car.roundTripPrice || 0
+
+
+        });
+
+
 
     data.pricing = {
 
@@ -78,38 +103,33 @@ export const createAirportTransferBookingService = async (data) => {
             car.roundTripPrice || 0,
 
 
-        baseAmount:
-            data.totalAmount,
+        ...calculation
 
-
-        extraCharge: 0,
-
-
-        totalAmount:
-            data.totalAmount
 
     };
 
 
 
+    // save
 
 
     const booking =
-        await airportTransferDao.create(data);
+        await airportTransferDao.create(
+            data
+        );
 
 
 
+    // socket
 
     const io = getIO();
 
 
-    io.to("admins").emit(
-
-        "new-airport-booking",
-
-        booking
-
-    );
+    io.to("admins")
+        .emit(
+            "new-airport-booking",
+            booking
+        );
 
 
 

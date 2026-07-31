@@ -33,11 +33,10 @@ import Wedding from "../../feature/public/wedding/ui/page/Wedding";
 import About from "../../feature/public/about/ui/page/About";
 import PremiumWithCar from "../../feature/public/premiumCarwithDriver/ui/page/PremiumWithCar";
 import AirportCarForm from "../../feature/public/Airport Transfer/ui/components/AirportCarForm";
-
+import WeddingBookingPage from "../../feature/public/wedding/ui/page/WeddingBookingPage";
 const router = createBrowserRouter([
-  // =========================
   // AUTH ROUTES
-  // =========================
+
   {
     path: "/",
     element: <PublicRoute />,
@@ -58,9 +57,8 @@ const router = createBrowserRouter([
     ],
   },
 
-  // =========================
   // USER ROUTES
-  // =========================
+
   {
     path: "/home",
     element: <ProtectedRoute />,
@@ -131,6 +129,10 @@ const router = createBrowserRouter([
             element: <Wedding />,
           },
 
+          {
+            path: "weddingBookingPage",
+            element: <WeddingBookingPage />,
+          },
           // Orders
           {
             path: "order",

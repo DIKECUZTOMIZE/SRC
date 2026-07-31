@@ -1,7 +1,7 @@
 import express from "express";
 import { createSelfDriveBookingSchema } from "../../../schema/selfDrive.schema.js";
 import { validate } from "../../../validator/validate .js";
-import { createBooking, deleteBooking, getBooking, getBookings, getMyBooking, getMyBookingsStatusList, getMyBookingStatusDetails, updateBooking, updateBookingStatus, } from "./selfDrive.controller.js";
+import {  createSelfDriveBooking, deleteBooking, getBooking, getBookings, getMyBooking, getMyBookingsStatusList, getMyBookingStatusDetails, updateBooking, updateBookingStatus, } from "./selfDrive.controller.js";
 import { authMiddleware, authorizationMiddleware } from "../../../middleware/auth.middleware.js";
 import asyncHandler from "../../../shared/utils/asyncHandle.js";
 
@@ -13,7 +13,7 @@ router.post(
     "/book",
     authMiddleware,
     validate(createSelfDriveBookingSchema),
-    asyncHandler(createBooking)
+    asyncHandler(createSelfDriveBooking)
 );
 
 

@@ -406,8 +406,9 @@ airportTransferBookingSchema.index({
 });
 
 
-const AirportTransferBooking = mongoose.model(
+const AirportTransferBookingModel = mongoose.model(
     "AirportTransferBooking",
     airportTransferBookingSchema
 );
 
+export default AirportTransferBookingModel

@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { nanoid } from "nanoid";
 import { buildSuccessResponse } from "../../../shared/utils/buildSuccessResponse.js";
-import { getAllAirportTransferService } from './airportTransfer.service.js'
+import { createAirportTransferBookingService, getAllAirportTransferService } from './airportTransfer.service.js'
 
 export const getAllAirportTransfer = async (req, res) => {
 
@@ -20,52 +20,42 @@ export const getAllAirportTransfer = async (req, res) => {
 export const createAirportTransferBooking = async (req, res) => {
 
     try {
+
+
         const bookingData = {
 
             ...req.body,
 
-
             bookingId: `AT-${nanoid(8)}`,
 
-
-            user: req.user?.userId || null,
+            user: req.user?.userId || null
 
         };
 
 
 
         const booking =
-            await createAirportTransferBookingService(bookingData);
+            await createAirportTransferBookingService(
+                bookingData
+            );
 
 
 
         return buildSuccessResponse(
-
             res,
-
             "Airport transfer booking created successfully",
-
             StatusCodes.CREATED,
-
             booking
-
         );
 
 
 
     } catch (error) {
 
-
-        console.error(
-            "Airport Transfer Booking Error:",
-            error
-        );
+        console.error(error);
 
 
-
-        return res.status(
-            error.statusCode || 500
-        ).json({
+        return res.status(500).json({
 
             success: false,
 
@@ -75,6 +65,7 @@ export const createAirportTransferBooking = async (req, res) => {
 
 
     }
+
 
 
 };

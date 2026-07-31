@@ -22,7 +22,7 @@ const driverBookingSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             default: null,
-            index: true,
+           
         },
 
 
@@ -363,7 +363,7 @@ const driverBookingSchema = new mongoose.Schema(
                 "Cancelled"
             ],
             default: "Not Started",
-            index: true
+           
         },
 
 
@@ -381,7 +381,7 @@ const driverBookingSchema = new mongoose.Schema(
                 "Cancelled"
             ],
             default: "Pending",
-            index: true,
+          
         },
 
         // ADMIN NOTE

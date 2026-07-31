@@ -1,32 +1,30 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { getSelfDriveCarsApi } from "../api/selfDriveApi";
 
 export const useSelfDriveCars = () => {
-  const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchCars = async () => {
-    try {
-      setLoading(true);
-
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["self-drive-cars"],
+    queryFn: async () => {
       const res = await getSelfDriveCarsApi();
-
-      setCars(res.data || []);
-    } catch (error) {
-      console.log(error);
-      setCars([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCars();
-  }, []);
+      return res.data || [];
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30,   // 30 minutes
+    retry: 2,
+    refetchOnWindowFocus: false,
+  });
 
   return {
-    cars,
-    loading,
-    fetchCars,
+    cars: data ?? [],
+    loading: isLoading,
+    isError,
+    error,
+    fetchCars: refetch,
   };
 };

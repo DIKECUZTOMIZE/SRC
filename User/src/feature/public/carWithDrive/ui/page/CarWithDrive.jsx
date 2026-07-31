@@ -1,76 +1,79 @@
 import React from "react";
-import { SlidersHorizontal } from "lucide-react";
-
+import { SlidersHorizontal, Plus, Plane } from "lucide-react";
 import DriverFilter from "../components/DriverFilter";
 import DriverCarCard from "../components/DriverCarCard";
 import useCarWithDriver from "../../hook/useCarWithDriver";
+import ApiState from "../../../../../shared/components/shared/ApiState";
+import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
+import { FilterPanel } from "../../../../../shared/components/ui";
+ 
+import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
+import CarWithDriverService from "../components/CarWithDriverService";
 
 const CarWithDriver = () => {
   const { cars, isLoading, isError, error } = useCarWithDriver();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500">Loading vehicles...</p>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">
-          {error?.response?.data?.message || "Failed to load vehicles"}
-        </p>
-      </div>
-    );
-  }
-
+  console.log(cars);
   return (
-    <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8 border-b pb-4">
-          <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold mb-3">
-            Guwahati Chauffeur Fleet
-          </div>
+    <ApiState isLoading={isLoading} isError={isError} error={error}>
+      <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader
+            badge="Guwahati Car With Drive Fleet"
+            title="Car With Drive"
+            subtitle="Cars"
+            description="Choose from our available self-drive vehicles."
+          />
 
-          <h2 className="text-3xl font-bold text-slate-900">
-            Car With Driver <span className="text-emerald-600">Rentals</span>
-          </h2>
+          {/* Filter */}
+          <FilterPanel maxDailybudgetClassName="text-[14px]" />
 
-          <p className="text-slate-500 mt-2">
-            Choose from our available chauffeur-driven vehicles.
-          </p>
+          {/* Car List */}
+
+          {cars?.length > 0 ? (
+            <div
+              className="
+                                grid grid-cols-1
+                                sm:grid-cols-2
+                                lg:grid-cols-4
+                                gap-5 mt-8
+                              "
+            >
+              {cars.map(
+                (car) => (
+                  console.log(car.pricePerDay),
+                  (
+                    <VehicleCard
+                      key={car._id}
+                      vehicle={car}
+
+                      // onBookNow={handleBookNow}
+                    >
+                      <CarWithDriverService
+                        driverChargePerDay={car.driverChargePerDay}
+                        pricePerDay={car.pricePerDay}
+                        pricePerHour={car.pricePerHour}
+                      />
+                    </VehicleCard>
+                  )
+                ),
+              )}
+            </div>
+          ) : (
+            <div className="text-center py-12 bg-white rounded-2xl border mt-8">
+              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
+
+              <h3 className="text-lg font-semibold">
+                No Airport Vehicles Available
+              </h3>
+
+              <p className="text-slate-500 mt-2">
+                Airport transfer cars are not available currently.
+              </p>
+            </div>
+          )}
         </div>
-
-        {/* Filter */}
-        <DriverFilter />
-
-        {/* Car List */}
-
-        {cars?.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
-            {cars.map((car) => (
-              <DriverCarCard key={car._id} car={car} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-2xl border mt-8">
-            <SlidersHorizontal
-              size={40}
-              className="mx-auto text-emerald-600 mb-4"
-            />
-
-            <h3 className="text-lg font-semibold">No Vehicles Available</h3>
-
-            <p className="text-slate-500 mt-2">
-              No chauffeur-driven vehicles are available right now.
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      </section>
+    </ApiState>
   );
 };
 

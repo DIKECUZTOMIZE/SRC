@@ -19,7 +19,7 @@ const selfDriveBookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
-      index: true,
+     
     },
 
 
@@ -296,7 +296,7 @@ totalAmount: {
         "Cancelled"
       ],
       default: "Not Started",
-      index: true,
+     
     },
 
 
@@ -315,7 +315,7 @@ totalAmount: {
         "Cancelled"
       ],
       default: "Pending",
-      index: true,
+     
     },
 
 

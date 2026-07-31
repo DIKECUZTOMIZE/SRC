@@ -2,8 +2,10 @@ import React from "react";
 
 import { Heart, Fuel, Settings, Users, ArrowUpRight } from "lucide-react";
 import WeddingPriceCard from "./WeddingPriceCard ";
+import { useNavigate } from "react-router";
 
 const WeddingCarCard = ({ car }) => {
+  let navigate = useNavigate();
   const imageUrl = car?.image
     ? `http://localhost:3000${car.image}`
     : "https://placehold.co/600x400?text=Wedding+Car";
@@ -31,28 +33,28 @@ bg-slate-100
           src={imageUrl}
           alt={`${car.brand} ${car.model}`}
           className="
-w-full
-h-full
-object-cover
-hover:scale-105
-transition
-"
+                            w-full
+                            h-full
+                            object-cover
+                            hover:scale-105 
+                            transition
+                            "
         />
       </div>
 
       <div className="p-4">
         <div
           className="
-flex
-justify-between
-items-center
-"
+                            flex
+                            justify-between
+                            items-center
+                            "
         >
           <h3
             className="
-text-xl
-font-bold
-"
+                              text-xl
+                              font-bold
+                              "
           >
             {car.brand} {car.model}
           </h3>
@@ -60,17 +62,17 @@ font-bold
           <Heart
             size={20}
             className="
-text-pink-600
-fill-pink-600
-"
+                          text-pink-600
+                          fill-pink-600
+                          "
           />
         </div>
 
         <p
           className="
-text-sm
-text-slate-500
-"
+                          text-sm
+                          text-slate-500
+                          "
         >
           {car.classification}
         </p>
@@ -82,20 +84,20 @@ text-slate-500
 
         <div
           className="
-grid
-grid-cols-2
-gap-2
-mt-4
-"
+                              grid
+                              grid-cols-2
+                              gap-2
+                              mt-4
+                              "
         >
           <div
             className="
-bg-slate-50
-rounded-lg
-p-2
-flex gap-2
-text-sm
-"
+                              bg-slate-50
+                              rounded-lg
+                              p-2
+                              flex gap-2
+                              text-sm
+                              "
           >
             <Fuel size={16} />
 
@@ -145,20 +147,23 @@ text-sm
         </div>
 
         <button
+          onClick={() => navigate("/home/weddingBookingPage",{
+            state:{car}
+          })}
           className="
-w-full
-mt-5
-py-3
-rounded-xl
-bg-pink-600
-hover:bg-pink-700
-text-white
-font-semibold
-flex
-justify-center
-items-center
-gap-2
-"
+                    w-full
+                    mt-5
+                    py-3
+                    rounded-xl
+                    bg-pink-600
+                    hover:bg-pink-700
+                    text-white
+                    font-semibold
+                    flex
+                    justify-center
+                    items-center
+                    gap-2
+                    "
         >
           Book Wedding Car
           <ArrowUpRight size={18} />
