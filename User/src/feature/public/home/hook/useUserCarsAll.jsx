@@ -1,33 +1,25 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { GetAllCarsApi } from "../api/homeApi";
 
 export const useUserCars = () => {
-  const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchCars = async () => {
-    try {
-      setLoading(true);
-
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ["userCars"],
+    queryFn: async () => {
       const response = await GetAllCarsApi();
 
-      if (response.success) {
-        setCars(response.data);
+      if (!response.success) {
+        throw new Error("Failed to fetch cars");
       }
-    } catch (error) {
-      console.log("FETCH ALL CARS ERROR:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchCars();
-  }, []);
+      return response.data;
+    },
+  });
 
   return {
-    cars,
-    loading,
-    fetchCars,
+    cars: data || [],
+    isLoading,
+    isError,
+    error,
+    fetchCars: refetch,
   };
 };

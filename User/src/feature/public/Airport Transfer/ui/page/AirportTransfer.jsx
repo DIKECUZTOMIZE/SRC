@@ -1,17 +1,46 @@
+/* eslint-disable no-undef */
 import React from "react";
 import { Plane } from "lucide-react";
 
-import useAirportTransfer from "../../hook/useAirportTransfer";
 import ApiState from "../../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
-
 import AirportService from "../components/AirportService";
 import { FilterPanel } from "../../../../../shared/components/ui/FilterPanel";
 import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
+import BlankState from "../../../../../shared/components/ui/BlankState";
+import useVehicleFilters from "../../../../../shared/hook/useVehicleFilters";
+import useAirportTransfer from "../../hook/useAirportTransfer";
 
 const AirportTransfer = () => {
   const { cars, isLoading, isError, error } = useAirportTransfer();
+  const CAR_TYPES = [
+    "All",
+    ...new Set(cars?.map((car) => car.classification).filter(Boolean)),
+  ];
+  const {
+    filteredCars,
 
+    searchQuery,
+    setSearchQuery,
+
+    selectedType,
+    setSelectedType,
+
+    selectedSeats,
+    setSelectedSeats,
+
+    maxPrice,
+    setMaxPrice,
+
+    isFilterActive,
+    handleResetFilters,
+  } = useVehicleFilters(
+    cars,
+    20000,
+    "pickupPrice",
+    "dropPrice",
+    "roundTripPrice",
+  );
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
       <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
@@ -22,10 +51,22 @@ const AirportTransfer = () => {
             subtitle="Cars"
             description="Choose from our available Airport Transfer vehicles."
           />
+          <FilterPanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            carTypes={CAR_TYPES}
+            isFilterActive={isFilterActive}
+            handleResetFilters={handleResetFilters}
+            maxDailybudgetClassName="text-[14px]"
+          />
 
-          <FilterPanel maxDailybudgetClassName="text-[14px]" />
-
-          {cars?.length > 0 ? (
+          {filteredCars?.length > 0 ? (
             <div
               className="
       grid grid-cols-1
@@ -34,7 +75,7 @@ const AirportTransfer = () => {
       gap-5 mt-8
     "
             >
-              {cars.map((car) => (
+              {filteredCars.map((car) => (
                 <VehicleCard
                   key={car._id}
                   vehicle={car}
@@ -51,17 +92,12 @@ const AirportTransfer = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-2xl border mt-8">
-              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
-
-              <h3 className="text-lg font-semibold">
-                No Airport Vehicles Available
-              </h3>
-
-              <p className="text-slate-500 mt-2">
-                Airport transfer cars are not available currently.
-              </p>
-            </div>
+            <BlankState
+              icon={Plane}
+              iconClassName="text-blue-600"
+              title="No Airport Vehicles Available"
+              description="Airport transfer cars are not available currently."
+            />
           )}
         </div>
       </section>

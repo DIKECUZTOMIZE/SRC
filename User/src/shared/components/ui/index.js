@@ -20,3 +20,4 @@ export * from "./MobileFirstForm";
 
 export * from "../../utils/cn";
 export * from "./VehicleCard";
+export * from "./BlankState";

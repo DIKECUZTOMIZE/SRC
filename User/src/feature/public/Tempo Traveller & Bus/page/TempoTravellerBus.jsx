@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useMemo, useState } from "react";
-import { SlidersHorizontal, Plane } from "lucide-react";
+import { SlidersHorizontal, Bus } from "lucide-react";
 import TempoFilter from "../components/TempoFilter";
 import TempoTravellerCard from "../components/TempoTravellerCard";
 import useTempoTravellerBus from "../hook/useTempoTravellerBus";
@@ -9,10 +9,33 @@ import SectionHeader from "../../../../shared/components/ui/SectionHeader";
 import { FilterPanel } from "../../../../shared/components/ui";
 import TempoTravellerService from "../components/TempoTravellerService";
 import VehicleCard from "../../../../shared/components/ui/VehicleCard";
+import BlankState from "../../../../shared/components/ui/BlankState";
+import useVehicleFilters from "../../../../shared/hook/useVehicleFilters";
 
 const TempoTravellerBus = () => {
   const { cars, isLoading, isError, error } = useTempoTravellerBus();
+  const CAR_TYPES = [
+    "All",
+    ...new Set(cars?.map((car) => car.classification).filter(Boolean)),
+  ];
+  const {
+    filteredCars,
 
+    searchQuery,
+    setSearchQuery,
+
+    selectedType,
+    setSelectedType,
+
+    selectedSeats,
+    setSelectedSeats,
+
+    maxPrice,
+    setMaxPrice,
+
+    isFilterActive,
+    handleResetFilters,
+  } = useVehicleFilters(cars);
   // const [search, setSearch] = useState("");
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
@@ -183,9 +206,22 @@ min-h-screen
             description="Choose from our available TempoTraveller Bus vehicles."
           />
 
-          <FilterPanel maxDailybudgetClassName="text-[14px]" />
+          <FilterPanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            carTypes={CAR_TYPES}
+            isFilterActive={isFilterActive}
+            handleResetFilters={handleResetFilters}
+            maxDailybudgetClassName="text-[14px]"
+          />
 
-          {cars?.length > 0 ? (
+          {filteredCars?.length > 0 ? (
             <div
               className="
                               grid grid-cols-1
@@ -195,7 +231,7 @@ min-h-screen
                               mt-8
                             "
             >
-              {cars.map((car) => (
+              {filteredCars.map((car) => (
                 <VehicleCard
                   key={car._id}
                   vehicle={car}
@@ -210,26 +246,12 @@ min-h-screen
               ))}
             </div>
           ) : (
-            <div
-              className="
-      text-center
-      py-12
-      bg-white
-      rounded-2xl
-      border
-      mt-8
-    "
-            >
-              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
-
-              <h3 className="text-lg font-semibold">
-                No Tempo Traveller Available
-              </h3>
-
-              <p className="text-slate-500 mt-2">
-                Tempo Traveller vehicles are not available currently.
-              </p>
-            </div>
+            <BlankState
+              icon={Bus}
+              iconClassName="text-blue-600"
+              title="No  Tempo Traveller Bus Vehicles Available"
+              description="Tempo Traveller Bus  are not available currently."
+            />
           )}
         </div>
       </section>

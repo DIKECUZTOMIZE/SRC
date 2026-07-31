@@ -16,6 +16,7 @@ import {
   RotateCcw,
   Eye,
   Sparkles,
+  KeyRound,
 } from "lucide-react";
 import { useSelfDriveCars } from "../../hook/useSelfDriveCarsCrad";
 import SelfDriveBookingForm from "../../ui/page/SelfDriveBookingForm";
@@ -24,43 +25,33 @@ import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
 import { FilterPanel } from "../../../../../shared/components/ui";
 import SelfDriveService from "../components/SelfDriveService";
 import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
+import BlankState from "../../../../../shared/components/ui/BlankState";
+import useVehicleFilters from "../../../../../shared/hook/useVehicleFilters";
 
 const SelfDrive = () => {
   const { cars, isLoading, isError, error, fetchCars } = useSelfDriveCars();
+  const CAR_TYPES = [
+    "All",
+    ...new Set(cars?.map((car) => car.classification).filter(Boolean)),
+  ];
+  const {
+    filteredCars,
 
-  // --- FILTER STATES ---
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("All");
-  const [maxPrice, setMaxPrice] = useState(50000);
-  const [selectedCar, setSelectedCar] = useState(null);
+    searchQuery,
+    setSearchQuery,
 
-  const carTypes = ["All", "SUV", "MPV", "Hatchback", "Sedan"];
+    selectedType,
+    setSelectedType,
 
-  // Filter Active Check
-  const isFilterActive = useMemo(() => {
-    return searchQuery !== "" || selectedType !== "All" || maxPrice !== 50000;
-  }, [searchQuery, selectedType, maxPrice]);
+    selectedSeats,
+    setSelectedSeats,
 
-  // Reset Filters Handler
-  const handleResetFilters = useCallback(() => {
-    setSearchQuery("");
-    setSelectedType("All");
-    setMaxPrice(50000);
-  }, []);
+    maxPrice,
+    setMaxPrice,
 
-  // --- FILTER LOGIC ---
-  const filteredCars = useMemo(() => {
-    return (cars || []).filter((car) => {
-      const carName = `${car.brand || ""} ${car.model || ""}`.toLowerCase();
-      const matchesSearch = carName.includes(searchQuery.toLowerCase());
-      const matchesType =
-        selectedType === "All" || car.classification === selectedType;
-      const matchesPrice = Number(car.pricePerDay || 0) <= Number(maxPrice);
-
-      return matchesSearch && matchesType && matchesPrice;
-    });
-  }, [cars, searchQuery, selectedType, maxPrice]);
-
+    isFilterActive,
+    handleResetFilters,
+  } = useVehicleFilters(cars, 20000, "pricePerDay", "pricePerHour");
   return (
     <ApiState isLoading={isLoading} error={error} isError={isError}>
       <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50/70 min-h-screen font-sans text-slate-800">
@@ -73,9 +64,22 @@ const SelfDrive = () => {
             description="Choose from our available Self Drive vehicles."
           />
 
-          <FilterPanel maxDailybudgetClassName="text-[14px]" />
+          <FilterPanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            carTypes={CAR_TYPES}
+            isFilterActive={isFilterActive}
+            handleResetFilters={handleResetFilters}
+            maxDailybudgetClassName="text-[14px]"
+          />
 
-             {cars?.length > 0 ? (
+          {filteredCars?.length > 0 ? (
             <div
               className="
                               grid grid-cols-1
@@ -85,7 +89,7 @@ const SelfDrive = () => {
                               mt-8
                             "
             >
-              {cars.map((car) => (
+              {filteredCars.map((car) => (
                 <VehicleCard
                   key={car._id}
                   vehicle={car}
@@ -101,35 +105,21 @@ const SelfDrive = () => {
               ))}
             </div>
           ) : (
-            <div
-              className="
-      text-center
-      py-12
-      bg-white
-      rounded-2xl
-      border
-      mt-8
-    "
-            >
-              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
-
-              <h3 className="text-lg font-semibold">
-                No Tempo Traveller Available
-              </h3>
-
-              <p className="text-slate-500 mt-2">
-                Tempo Traveller vehicles are not available currently.
-              </p>
-            </div>
+            <BlankState
+              icon={KeyRound}
+              iconClassName="text-blue-600"
+              title="No  Self Drive Vehicles Available"
+              description="Self Drive cars are not available currently."
+            />
           )}
 
           {/* --- BOOKING MODAL (Rendered Outside Loop) --- */}
-          {selectedCar && (
+          {/* {selectedCar && (
             <SelfDriveBookingForm
               car={selectedCar}
               onClose={() => setSelectedCar(null)}
             />
-          )}
+          )} */}
         </div>
       </section>
     </ApiState>

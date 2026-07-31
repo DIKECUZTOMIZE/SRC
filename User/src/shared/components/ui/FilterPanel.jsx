@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { SlidersHorizontal, RotateCcw, Search, Car, Users } from "lucide-react";
 
@@ -10,19 +11,28 @@ import { filterPanelToken } from "../../styles";
 import { cx } from "../../utils/cn";
 
 // Helper utility for combining classes
-
+let [showBudget, setShowBudget] = "true";
 export const FilterPanel = React.memo(
   ({
+    // Search
     searchQuery,
     setSearchQuery,
+
+    // Classification
     selectedType,
     setSelectedType,
+    carTypes = [],
+
+    // Seats
+    selectedSeats,
+    setSelectedSeats,
+
+    // Budget
     maxPrice,
     setMaxPrice,
-    selectedSeats,
     maxDailybudgetClassName,
-    setSelectedSeats,
-    carTypes = [],
+
+    // Actions
     isFilterActive,
     handleResetFilters,
   }) => {
@@ -90,33 +100,38 @@ export const FilterPanel = React.memo(
           </div>
 
           {/* 4. Max Daily Budget Slider */}
-          <div className={filterPanelToken.budgetCol}>
-            <div className={filterPanelToken.labelGroup}>
-              <label
-                className={cx(filterPanelToken.label, maxDailybudgetClassName)}
-              >
-                Max Daily Budget
-              </label>
-              <span className={filterPanelToken.badgeValue}>
-                ₹{Number(maxPrice || 0).toLocaleString("en-IN")}
-              </span>
-            </div>
+          {showBudget && (
+            <div className={filterPanelToken.budgetCol}>
+              <div className={filterPanelToken.labelGroup}>
+                <label
+                  className={cx(
+                    filterPanelToken.label,
+                    maxDailybudgetClassName,
+                  )}
+                >
+                  Max Daily Budget
+                </label>
+                <span className={filterPanelToken.badgeValue}>
+                  ₹{Number(maxPrice || 0).toLocaleString("en-IN")}
+                </span>
+              </div>
 
-            <input
-              type="range"
-              min="100"
-              max="50000"
-              step="100"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              className={filterPanelToken.rangeInput}
-            />
+              <input
+                type="range"
+                min="100"
+                max="20000"
+                step="100"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className={filterPanelToken.rangeInput}
+              />
 
-            <div className={filterPanelToken.rangeLimits}>
-              <span>Min: ₹100</span>
-              <span>Max: ₹50,000</span>
+              <div className={filterPanelToken.rangeLimits}>
+                <span>Min: ₹100</span>
+                <span>Max: ₹20,000</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </Card>
     );

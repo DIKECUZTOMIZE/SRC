@@ -2,6 +2,7 @@ export * from "./badgeToken";
 export * from "./buttonTokens";
 export * from "./cardTokens";
 export * from "./inputToken";
+export * from "./blankStateToken";
 export * from "./typography";
 export * from "./colors";
 export * from "./spacing";

@@ -33,7 +33,7 @@ export const filterPanelToken = {
 
   // Mobile Touch-Friendly Input Track & Thumb
   rangeInput:
-    "w-full h-2 sm:h-1.5 bg-[var(--color-bg-tertiary)] rounded-lg appearance-none cursor-pointer accent-[var(--color-primary)] focus:outline-none " +
+  "w-full h-2 sm:h-1.5 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-[var(--color-primary)]/80 to-[var(--color-primary)]/20 focus:outline-none " +
     /* Webkit (Chrome/Safari/iOS) */
     "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 sm:[&::-webkit-slider-thumb]:w-4 sm:[&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--color-primary)] [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:active:scale-125 sm:[&::-webkit-slider-thumb]:hover:scale-125 " +
     /* Firefox */

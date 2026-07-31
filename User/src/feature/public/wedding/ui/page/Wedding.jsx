@@ -1,5 +1,5 @@
 import React from "react";
-import { Heart, Plane } from "lucide-react";
+import { Heart, CalendarDays } from "lucide-react";
 import useWeddingCar from "../../hook/useWeddingCar";
 import WeddingHeader from "../components/WeddingHeader";
 import WeddingFilter from "../components/WeddingFilter";
@@ -9,10 +9,33 @@ import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
 import { FilterPanel } from "../../../../../shared/components/ui";
 import WeddingCarService from "../components/WeddingCarService";
 import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
+import BlankState from "../../../../../shared/components/ui/BlankState";
+import useVehicleFilters from "../../../../../shared/hook/useVehicleFilters";
 
 const Wedding = () => {
   const { cars, isLoading, isError, error } = useWeddingCar();
+  const CAR_TYPES = [
+    "All",
+    ...new Set(cars?.map((car) => car.classification).filter(Boolean)),
+  ];
+  const {
+    filteredCars,
 
+    searchQuery,
+    setSearchQuery,
+
+    selectedType,
+    setSelectedType,
+
+    selectedSeats,
+    setSelectedSeats,
+
+    maxPrice,
+    setMaxPrice,
+
+    isFilterActive,
+    handleResetFilters,
+  } = useVehicleFilters(cars, 20000, "pricePerDay");
   return (
     <ApiState isLoading={isLoading} error={error} isError={isError}>
       <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
@@ -25,9 +48,22 @@ const Wedding = () => {
             subtitle="Cars"
             description="Choose from our available Wedding vehicles."
           />
-          <FilterPanel maxDailybudgetClassName="text-[14px]" />
+          <FilterPanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            carTypes={CAR_TYPES}
+            isFilterActive={isFilterActive}
+            handleResetFilters={handleResetFilters}
+            maxDailybudgetClassName="text-[14px]"
+          />
 
-          {cars?.length > 0 ? (
+          {filteredCars?.length > 0 ? (
             <div
               className="
                               grid grid-cols-1
@@ -37,7 +73,7 @@ const Wedding = () => {
                               mt-8
                             "
             >
-              {cars.map((car) => (
+              {filteredCars.map((car) => (
                 <VehicleCard
                   key={car._id}
                   vehicle={car}
@@ -52,26 +88,12 @@ const Wedding = () => {
               ))}
             </div>
           ) : (
-            <div
-              className="
-      text-center
-      py-12
-      bg-white
-      rounded-2xl
-      border
-      mt-8
-    "
-            >
-              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
-
-              <h3 className="text-lg font-semibold">
-                No Tempo Traveller Available
-              </h3>
-
-              <p className="text-slate-500 mt-2">
-                Tempo Traveller vehicles are not available currently.
-              </p>
-            </div>
+            <BlankState
+              icon={Heart}
+              iconClassName="text-blue-600"
+              title="No Wedding Vehicles Available"
+              description="Wedding  are not available currently."
+            />
           )}
 
           {/*  */}

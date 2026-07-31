@@ -1,5 +1,5 @@
 import React from "react";
-import { Crown,Plane } from "lucide-react";
+import { Crown, Plane } from "lucide-react";
 
 import PremiumCarCard from "../components/PremiumCarCard";
 import usePremiumCar from "../../hook/usePremiumCar";
@@ -8,10 +8,33 @@ import ApiState from "../../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
 import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
 import PremiumCarService from "../components/PremiumCarService";
+import BlankState from "../../../../../shared/components/ui/BlankState";
+import useVehicleFilters from "../../../../../shared/hook/useVehicleFilters";
 
 const PremiumWithCar = () => {
   const { cars, isLoading, isError, error } = usePremiumCar();
+  const CAR_TYPES = [
+    "All",
+    ...new Set(cars?.map((car) => car.classification).filter(Boolean)),
+  ];
+  const {
+    filteredCars,
 
+    searchQuery,
+    setSearchQuery,
+
+    selectedType,
+    setSelectedType,
+
+    selectedSeats,
+    setSelectedSeats,
+
+    maxPrice,
+    setMaxPrice,
+
+    isFilterActive,
+    handleResetFilters,
+  } = useVehicleFilters(cars);
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
       <section
@@ -32,10 +55,22 @@ const PremiumWithCar = () => {
             // subtitleClassName="text-red-600 text-2xl"
           />
 
-          <FilterPanel maxDailybudgetClassName="text-[14px]" />
-          {/* <PremiumFilter /> */}
+          <FilterPanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            selectedSeats={selectedSeats}
+            setSelectedSeats={setSelectedSeats}
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+            carTypes={CAR_TYPES}
+            isFilterActive={isFilterActive}
+            handleResetFilters={handleResetFilters}
+            maxDailybudgetClassName="text-[14px]"
+          />
 
-          {cars?.length > 0 ? (
+          {filteredCars?.length > 0 ? (
             <div
               className="
                                 grid grid-cols-1
@@ -44,39 +79,29 @@ const PremiumWithCar = () => {
                                 gap-5 mt-8
                               "
             >
-              {cars.map(
-                (car) => (
-              
-                  (
-                    <VehicleCard
-                      key={car._id}
-                      vehicle={car}
-                      actionLabel="Send Enquiry"
-                      actionVariant="secondary"
-                      // onBookNow={handleBookNow}
-                    >
-                      <PremiumCarService
-                        description={car.description}
-                        pricePerDay={car.pricePerDay}
-                        pricePerHour={car.pricePerHour}
-                      />
-                    </VehicleCard>
-                  )
-                ),
-              )}
+              {filteredCars.map((car) => (
+                <VehicleCard
+                  key={car._id}
+                  vehicle={car}
+                  actionLabel="Send Enquiry"
+                  actionVariant="secondary"
+                  // onBookNow={handleBookNow}
+                >
+                  <PremiumCarService
+                    description={car.description}
+                    pricePerDay={car.pricePerDay}
+                    pricePerHour={car.pricePerHour}
+                  />
+                </VehicleCard>
+              ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-2xl border mt-8">
-              <Plane size={40} className="mx-auto text-blue-600 mb-4" />
-
-              <h3 className="text-lg font-semibold">
-                No Airport Vehicles Available
-              </h3>
-
-              <p className="text-slate-500 mt-2">
-                Airport transfer cars are not available currently.
-              </p>
-            </div>
+            <BlankState
+              icon={Crown}
+              iconClassName="text-blue-600"
+              title="No  Premium Vehicles Available"
+              description="Premium are not available currently."
+            />
           )}
         </div>
       </section>

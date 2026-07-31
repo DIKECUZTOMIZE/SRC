@@ -3,7 +3,6 @@
 import React from "react";
 import { Users, Fuel, Snowflake, Gauge, Heart, Star } from "lucide-react";
 
- 
 import Button from "./Button";
 import Card from "./Card";
 import Image from "./Image";
@@ -15,7 +14,6 @@ const VehicleCard = ({
   vehicle,
   children,
   onBookNow,
-
   actionVariant = "primary",
   showAction = true,
   favorite = false,
@@ -33,7 +31,7 @@ const VehicleCard = ({
     status = "Available",
     rating = 4.8,
     totalReviews = 0,
-
+    classification = "",
     seats = 0,
     fuel,
     transmission,
@@ -55,14 +53,25 @@ const VehicleCard = ({
         wrapperClassName={vehicleCardToken.imageWrapper}
         className={vehicleCardToken.image}
       >
+        {/* Classification */}
+        {classification && (
+          <Badge
+            variant="info"
+            className={vehicleCardToken.classificationBadge}
+          >
+            {classification}
+          </Badge>
+        )}
         {/* Status */}
-        <Badge
-          variant={status === "Available" ? "success" : "danger"}
-          dot
-          className={vehicleCardToken.statusBadge}
-        >
-          {status}
-        </Badge>
+        {status && (
+          <Badge
+            variant={status === "Available" ? "success" : "danger"}
+            dot
+            className={vehicleCardToken.statusBadge}
+          >
+            {status}
+          </Badge>
+        )}
 
         {/* Rating */}
         {/* <Badge variant="warning" className={vehicleCardToken.rating}>
