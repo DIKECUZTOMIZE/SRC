@@ -11,7 +11,7 @@ import { filterPanelToken } from "../../styles";
 import { cx } from "../../utils/cn";
 
 // Helper utility for combining classes
-let [showBudget, setShowBudget] = "true";
+// let [showBudget, setShowBudget] = "true";
 export const FilterPanel = React.memo(
   ({
     // Search
@@ -35,6 +35,7 @@ export const FilterPanel = React.memo(
     // Actions
     isFilterActive,
     handleResetFilters,
+    showBudget,
   }) => {
     return (
       <Card className={filterPanelToken.wrapper}>

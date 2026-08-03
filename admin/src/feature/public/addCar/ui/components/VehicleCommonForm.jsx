@@ -74,7 +74,14 @@ const VehicleCommonForm = ({ register, watch }) => {
         {...register("seats")}
         className="border rounded-xl p-3"
       />
+      {/* AC Type */}
+      <select {...register("acType")} className="border rounded-xl p-3">
+        <option value="">AC Type</option>
 
+        <option value="AC">AC</option>
+
+        <option value="Non AC">Non AC</option>
+      </select>
       {/* Image */}
       <input
         type="file"

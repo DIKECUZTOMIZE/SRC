@@ -32,32 +32,32 @@ export const vehicleCardToken = {
   /* ==========================
    * Body
    * ========================== */
-  content:
-    "flex flex-1 flex-col gap-3 p-4",
+content:
+  "flex flex-1 flex-col gap-4 md:gap-3 p-5 md:p-4",
 
-  header:
-    "flex items-start justify-between",
+header:
+  "flex items-start justify-between",
 
-  titleGroup:
-    "flex-1 min-w-0",
+titleGroup:
+  "flex-1 min-w-0",
 
-  title:
-    "truncate text-base font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors",
+title:
+  "truncate text-lg md:text-base font-bold text-[var(--color-text-primary)] group-hover:text-[var(--color-primary)] transition-colors",
 
-  subtitle:
-    "mt-1 text-xs text-[var(--color-text-secondary)] truncate",
+subtitle:
+  "mt-1 text-sm md:text-xs text-[var(--color-text-secondary)] truncate",
 
   /* ==========================
    * Specs
    * ========================== */
   specs:
-    "grid grid-cols-2 gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-2",
+  "grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-3 md:p-2",
 
-  specItem:
-    "flex items-center gap-2 text-xs text-[var(--color-text-secondary)]",
+specItem:
+  "flex flex-col items-center justify-center text-xs md:text-[10px] text-[var(--color-text-secondary)] text-center",
 
-  specIcon:
-    "h-4 w-4 shrink-0 text-[var(--color-primary)]",
+specIcon:
+  "h-5 w-5 md:h-4 md:w-4 shrink-0 text-[var(--color-primary)]",
 
   /* ==========================
    * Service
@@ -72,11 +72,10 @@ export const vehicleCardToken = {
     "flex items-center justify-between py-1.5",
 
   serviceLabel:
-    "flex items-center gap-2 text-xs font-medium text-[var(--color-text-secondary)]",
+  "flex items-center gap-2 text-sm md:text-xs font-medium text-[var(--color-text-secondary)]",
 
-  serviceValue:
-    "text-sm font-bold text-[var(--color-primary)]",
-
+serviceValue:
+  "text-base md:text-sm font-bold text-[var(--color-primary)]",
   /* ==========================
    * Footer
    * ========================== */

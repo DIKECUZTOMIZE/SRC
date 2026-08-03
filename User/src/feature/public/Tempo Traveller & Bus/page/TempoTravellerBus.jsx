@@ -6,11 +6,16 @@ import TempoTravellerCard from "../components/TempoTravellerCard";
 import useTempoTravellerBus from "../hook/useTempoTravellerBus";
 import ApiState from "../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../shared/components/ui/SectionHeader";
-import { FilterPanel } from "../../../../shared/components/ui";
+import { Button, FilterPanel } from "../../../../shared/components/ui";
 import TempoTravellerService from "../components/TempoTravellerService";
 import VehicleCard from "../../../../shared/components/ui/VehicleCard";
 import BlankState from "../../../../shared/components/ui/BlankState";
 import useVehicleFilters from "../../../../shared/hook/useVehicleFilters";
+import { filterPanelToken } from "../../../../shared/styles";
+import Drawer from "../../../../shared/components/ui/Drawer";
+import BookingModal from "../../../../shared/components/ui/BookingModal";
+import useBookingModal from "../../../../shared/hook/useBookingModal";
+import VehicleSummary from "../../../../shared/components/ui/VehicleSummary";
 
 const TempoTravellerBus = () => {
   const { cars, isLoading, isError, error } = useTempoTravellerBus();
@@ -36,7 +41,12 @@ const TempoTravellerBus = () => {
     isFilterActive,
     handleResetFilters,
   } = useVehicleFilters(cars);
-  // const [search, setSearch] = useState("");
+  const [open, setOpen] = useState(false);
+
+  // Booking Model
+  let { isOpen, selectedVehicle, openBookingModal, closeBookingModal } =
+    useBookingModal();
+ 
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
       <section
@@ -205,21 +215,53 @@ min-h-screen
             subtitle="Cars"
             description="Choose from our available TempoTraveller Bus vehicles."
           />
+          <Button
+            variant="primary"
+            onClick={() => setOpen(true)}
+            className={filterPanelToken.mobileButton}
+          >
+            Filters
+          </Button>
 
-          <FilterPanel
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedType={selectedType}
-            setSelectedType={setSelectedType}
-            selectedSeats={selectedSeats}
-            setSelectedSeats={setSelectedSeats}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            carTypes={CAR_TYPES}
-            isFilterActive={isFilterActive}
-            handleResetFilters={handleResetFilters}
-            maxDailybudgetClassName="text-[14px]"
-          />
+          <div className={filterPanelToken.desktopFilter}>
+            <FilterPanel
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </div>
+
+          <Drawer
+            open={open}
+            onClose={() => setOpen(false)}
+            title="Filter Vehicles"
+            className={filterPanelToken.mobileDrawer}
+          >
+            <FilterPanel
+              showBudget={false}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </Drawer>
 
           {filteredCars?.length > 0 ? (
             <div
@@ -236,7 +278,7 @@ min-h-screen
                   key={car._id}
                   vehicle={car}
                   actionLabel="Send Enquiry"
-                  actionVariant="secondary"
+                  onBookNow={openBookingModal}
                 >
                   <TempoTravellerService
                     description={car.description}
@@ -253,6 +295,21 @@ min-h-screen
               description="Tempo Traveller Bus  are not available currently."
             />
           )}
+
+          <BookingModal
+            open={isOpen}
+            onClose={closeBookingModal}
+            title="Book Your Vehicle"
+            subtitle="Fill details to confirm booking"
+            vehicle={selectedVehicle}
+          >
+            <VehicleSummary vehicle={selectedVehicle}   />
+            {/* 
+                                <BookingForm
+                                  vehicle={selectedVehicle}
+                                  onClose={closeBookingModal}
+                                /> */}
+          </BookingModal>
         </div>
       </section>
     </ApiState>

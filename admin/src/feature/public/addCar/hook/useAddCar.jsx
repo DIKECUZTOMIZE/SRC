@@ -60,7 +60,7 @@ export const useCarForm = (id) => {
 
         fuel: car.fuel || "",
         transmission: car.transmission || "",
-
+        acType: car.acType || "", // ✅ ADD THIS
         seats: Number(car.seats || 0),
 
         description: car.description || "",

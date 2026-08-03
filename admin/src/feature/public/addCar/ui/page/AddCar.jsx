@@ -17,7 +17,7 @@ const AddCar = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <CategorySelect register={register} errors={errors} />
 
-      <VehicleCommonForm register={register} errors={errors}watch={watch} />
+      <VehicleCommonForm register={register} errors={errors} watch={watch} />
 
       {category === "Self Drive" && (
         <SelfDriveForm register={register} watch={watch} />
@@ -34,7 +34,13 @@ const AddCar = () => {
       )}
 
       {category === "Tempo Traveller & Bus" && (
-        <TempoTravellerBusForm register={register} watch={watch} handleSubmit={handleSubmit} loading={loading} onSubmit={onSubmit}/>
+        <TempoTravellerBusForm
+          register={register}
+          watch={watch}
+          handleSubmit={handleSubmit}
+          loading={loading}
+          onSubmit={onSubmit}
+        />
       )}
       {category === "Airport Transfer" && (
         <AirportTransferForm register={register} />

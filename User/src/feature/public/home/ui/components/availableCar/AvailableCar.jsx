@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import React, { useState, useMemo, useCallback } from "react";
 import {
   Users,
@@ -20,12 +20,14 @@ import {
 } from "lucide-react";
 import { useUserCars } from "../../../hook/useUserCarsAll";
 import SectionHeader from "../../../../../../shared/components/ui/SectionHeader";
-import { FilterPanel } from "../../../../../../shared/components/ui";
+import { Button, FilterPanel } from "../../../../../../shared/components/ui";
 import AvailableCarService from "./AvailableCarService";
 import VehicleCard from "../../../../../../shared/components/ui/VehicleCard";
 import BlankState from "../../../../../../shared/components/ui/BlankState";
 import ApiState from "../../../../../../shared/components/shared/ApiState";
 import useVehicleFilters from "../../../../../../shared/hook/useVehicleFilters";
+import { filterPanelToken } from "../../../../../../shared/styles";
+import Drawer from "../../../../../../shared/components/ui/Drawer";
 
 const AvailableCars = () => {
   const { cars, isLoading, isError, error } = useUserCars();
@@ -51,6 +53,7 @@ const AvailableCars = () => {
     isFilterActive,
     handleResetFilters,
   } = useVehicleFilters(cars, 20000, "pricePerDay", "pricePerHour");
+  const [open, setOpen] = useState(false);
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
       <section
@@ -71,21 +74,54 @@ const AvailableCars = () => {
             title="Car List"
             subtitle="See"
           />
-          <FilterPanel
-          showBudget = {false}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedType={selectedType}
-            setSelectedType={setSelectedType}
-            selectedSeats={selectedSeats}
-            setSelectedSeats={setSelectedSeats}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            carTypes={CAR_TYPES}
-            isFilterActive={isFilterActive}
-            handleResetFilters={handleResetFilters}
-            maxDailybudgetClassName="text-[14px]"
-          /> 
+          {/* Drawer */}
+          <Button
+            variant="primary"
+            onClick={() => setOpen(true)}
+            className={filterPanelToken.mobileButton}
+          >
+            Filters
+          </Button>
+
+          <div className={filterPanelToken.desktopFilter}>
+            <FilterPanel
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </div>
+
+          <Drawer
+            open={open}
+            onClose={() => setOpen(false)}
+            title="Filter Vehicles"
+            className={filterPanelToken.mobileDrawer}
+          >
+            <FilterPanel
+              showBudget={false}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </Drawer>
           {filteredCars?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
               {filteredCars.map((car) => (

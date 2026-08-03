@@ -25,14 +25,12 @@ import SelfBookingStatus from "../../feature/public/selfDriveBooking/ui/componen
 import SelfBookingStatusDetails from "../../feature/public/selfDriveBooking/ui/components/SelfBookingStatusDetails";
 
 import CarWithDrive from "../../feature/public/carWithDrive/ui/page/CarWithDrive";
-import DriverBookingForm from "../../feature/public/carWithDrive/ui/components/DriverBookingForm";
-
+ 
 import AirportTransfer from "../../feature/public/Airport Transfer/ui/page/AirportTransfer";
 import TempoTravellerBus from "../../feature/public/Tempo Traveller & Bus/page/TempoTravellerBus";
 import Wedding from "../../feature/public/wedding/ui/page/Wedding";
 import About from "../../feature/public/about/ui/page/About";
 import PremiumWithCar from "../../feature/public/premiumCarwithDriver/ui/page/PremiumWithCar";
-import AirportCarForm from "../../feature/public/Airport Transfer/ui/components/AirportCarForm";
 import WeddingBookingPage from "../../feature/public/wedding/ui/page/WeddingBookingPage";
 const router = createBrowserRouter([
   // AUTH ROUTES
@@ -97,10 +95,10 @@ const router = createBrowserRouter([
             path: "car-with-driver",
             element: <CarWithDrive />,
           },
-          {
-            path: "driver-booking/:id",
-            element: <DriverBookingForm />,
-          },
+          // {
+          //  path: "driver-booking/:id",
+          //   element: <DriverBookingForm />,
+          // }, 
 
           // Premium
           {
@@ -112,10 +110,10 @@ const router = createBrowserRouter([
             path: "airport",
             element: <AirportTransfer />,
           },
-          {
-            path: "airportBookingForm",
-            element: <AirportCarForm />,
-          },
+          // {
+          //   path: "airportBookingForm",
+          //   element: <AirportCarForm />,
+          // },
 
           // Tempo Traveller
           {

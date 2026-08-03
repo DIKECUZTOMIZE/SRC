@@ -8,13 +8,13 @@ const SelfDriveService = ({ pricePerHour, pricePerDay }) => {
     {
       label: "Hourly Rate",
       price: pricePerHour,
-    //   unit: "/hour",
+      //   unit: "/hour",
       icon: Clock,
     },
     {
       label: "Daily Rate",
       price: pricePerDay,
-    //   unit: "/day",
+      //   unit: "/day",
       icon: CalendarDays,
     },
   ];

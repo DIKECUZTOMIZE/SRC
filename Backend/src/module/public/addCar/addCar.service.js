@@ -17,6 +17,8 @@ export const createCarService = async (data) => {
             fuel: data.fuel,
 
             transmission: data.transmission,
+            // AC TYPE ADD
+            acType: data.acType || "",
 
             seats: Number(data.seats),
 

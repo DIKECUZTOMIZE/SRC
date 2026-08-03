@@ -3,7 +3,12 @@ import { Clock, CalendarDays, Phone, Tag } from "lucide-react";
 import { vehicleCardToken } from "../../../../../shared/styles";
 import { Badge } from "../../../../../shared/components/ui";
 
-const PremiumCarService = ({ pricePerDay, pricePerHour, description, features = ["VIP Long Trip", "VIP Long Day"] }) => {
+const PremiumCarService = ({
+  pricePerDay,
+  pricePerHour,
+  description,
+  features = ["VIP Long Trip", "VIP Long Day"],
+}) => {
   const services = [
     {
       label: "Day Price",
@@ -20,7 +25,11 @@ const PremiumCarService = ({ pricePerDay, pricePerHour, description, features = 
   ];
 
   const hasAnyPrice = services.some(
-    (s) => s.price !== undefined && s.price !== null && s.price !== "" && Number(s.price) > 0
+    (s) =>
+      s.price !== undefined &&
+      s.price !== null &&
+      s.price !== "" &&
+      Number(s.price) > 0,
   );
 
   return (
@@ -44,11 +53,15 @@ const PremiumCarService = ({ pricePerDay, pricePerHour, description, features = 
               <div key={service.label} className={vehicleCardToken.serviceRow}>
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Icon size={13} className={vehicleCardToken.specIcon} />
-                  <span className={vehicleCardToken.serviceLabel}>{service.label}</span>
+                  <span className={vehicleCardToken.serviceLabel}>
+                    {service.label}
+                  </span>
                 </div>
                 <span className={vehicleCardToken.serviceValue}>
                   ₹{Number(service.price).toLocaleString("en-IN")}
-                  <span className="text-[9px] font-normal opacity-80">{service.unit}</span>
+                  <span className="text-[9px] font-normal opacity-80">
+                    {service.unit}
+                  </span>
                 </span>
               </div>
             );
@@ -57,9 +70,14 @@ const PremiumCarService = ({ pricePerDay, pricePerHour, description, features = 
           <div className={vehicleCardToken.serviceRow}>
             <div className="flex items-center gap-1.5 min-w-0">
               <Phone size={13} className={vehicleCardToken.specIcon} />
-              <span className={vehicleCardToken.serviceLabel}>Discussion Price</span>
+              <span className={vehicleCardToken.serviceLabel}>
+                Discussion Price
+              </span>
             </div>
-            <Badge variant="primary" className="text-[9px] px-1.5 py-0.5 font-bold">
+            <Badge
+              variant="primary"
+              className="text-[9px] px-1.5 py-0.5 font-bold"
+            >
               Contact
             </Badge>
           </div>
@@ -75,7 +93,9 @@ const PremiumCarService = ({ pricePerDay, pricePerHour, description, features = 
               className="inline-flex items-center gap-1 rounded-md bg-[var(--color-bg-primary)] px-1.5 py-0.5 text-[9px] font-semibold text-[var(--color-text-secondary)] border border-[var(--color-border)]/80 min-w-0"
             >
               <Tag size={10} className="text-[var(--color-primary)] shrink-0" />
-              <span className="truncate">{feature}</span>
+              <span className="truncate text-[15px] sm:text-[20px] md:text-[15px] lg:text-[11px]">
+                {feature}
+              </span>
             </span>
           ))}
         </div>

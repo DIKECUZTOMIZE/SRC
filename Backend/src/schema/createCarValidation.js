@@ -80,6 +80,17 @@ export const createCarValidation = z
       ])
       .optional(),
 
+    // AC TYPE
+
+ // AC TYPE
+
+acType: z
+  .enum([
+    "",
+    "AC",
+    "Non AC",
+  ])
+  .optional(),
 
 
     seats: z

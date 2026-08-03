@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { SlidersHorizontal, Plus, UserRound } from "lucide-react";
-import DriverFilter from "../components/DriverFilter";
-import DriverCarCard from "../components/DriverCarCard";
+
 import useCarWithDriver from "../../hook/useCarWithDriver";
 import ApiState from "../../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
-import { FilterPanel } from "../../../../../shared/components/ui";
+import { Button, FilterPanel } from "../../../../../shared/components/ui";
 
 import VehicleCard from "../../../../../shared/components/ui/VehicleCard";
 import CarWithDriverService from "../components/CarWithDriverService";
 import BlankState from "../../../../../shared/components/ui/BlankState";
 import useVehicleFilters from "../../../../../shared/hook/useVehicleFilters";
+import { filterPanelToken } from "../../../../../shared/styles";
+import Drawer from "../../../../../shared/components/ui/Drawer";
+import useBookingModal from "../../../../../shared/hook/useBookingModal";
+import BookingModal from "../../../../../shared/components/ui/BookingModal";
+import VehicleSummary from "../../../../../shared/components/ui/VehicleSummary";
+import CarWithDriverBookingForm from "../components/CarWithDriverBookingForm";
 
 const CarWithDriver = () => {
   const { cars, isLoading, isError, error } = useCarWithDriver();
@@ -35,7 +40,26 @@ const CarWithDriver = () => {
 
     isFilterActive,
     handleResetFilters,
-  } = useVehicleFilters(cars, 20000,"pricePerHour","pricePerDay");
+  } = useVehicleFilters(cars, 20000, "pricePerHour", "pricePerDay");
+  const [open, setOpen] = useState(false);
+
+  // Booking Model
+  let { isOpen, selectedVehicle, openBookingModal, closeBookingModal } =
+    useBookingModal();
+  const prices = [
+    {
+      label: "pricePerDay",
+      value: selectedVehicle?.pricePerDay,
+    },
+    {
+      label: "pricePerHour",
+      value: selectedVehicle?.pricePerHour,
+    },
+    {
+      label: "driverChargePerDay",
+      value: selectedVehicle?.driverChargePerDay,
+    },
+  ];
   return (
     <ApiState isLoading={isLoading} isError={isError} error={error}>
       <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
@@ -47,21 +71,54 @@ const CarWithDriver = () => {
             description="Choose from our available self-drive vehicles."
           />
 
-          {/* Filter */}
-          <FilterPanel
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedType={selectedType}
-            setSelectedType={setSelectedType}
-            selectedSeats={selectedSeats}
-            setSelectedSeats={setSelectedSeats}
-            maxPrice={maxPrice}
-            setMaxPrice={setMaxPrice}
-            carTypes={CAR_TYPES}
-            isFilterActive={isFilterActive}
-            handleResetFilters={handleResetFilters}
-            maxDailybudgetClassName="text-[14px]"
-          />
+          {/* Drawer */}
+          <Button
+            variant="primary"
+            onClick={() => setOpen(true)}
+            className={filterPanelToken.mobileButton}
+          >
+            Filters
+          </Button>
+
+          <div className={filterPanelToken.desktopFilter}>
+            <FilterPanel
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </div>
+
+          <Drawer
+            open={open}
+            onClose={() => setOpen(false)}
+            title="Filter Vehicles"
+            className={filterPanelToken.mobileDrawer}
+          >
+            <FilterPanel
+              showBudget={false}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedSeats={selectedSeats}
+              setSelectedSeats={setSelectedSeats}
+              maxPrice={maxPrice}
+              setMaxPrice={setMaxPrice}
+              carTypes={CAR_TYPES}
+              isFilterActive={isFilterActive}
+              handleResetFilters={handleResetFilters}
+              maxDailybudgetClassName="text-[14px]"
+            />
+          </Drawer>
 
           {/* Car List */}
 
@@ -74,25 +131,19 @@ const CarWithDriver = () => {
                                 gap-5 mt-8
                               "
             >
-              {filteredCars.map(
-                (car) => (
-                  console.log(car.pricePerDay),
-                  (
-                    <VehicleCard
-                      key={car._id}
-                      vehicle={car}
-
-                      // onBookNow={handleBookNow}
-                    >
-                      <CarWithDriverService
-                        driverChargePerDay={car.driverChargePerDay}
-                        pricePerDay={car.pricePerDay}
-                        pricePerHour={car.pricePerHour}
-                      />
-                    </VehicleCard>
-                  )
-                ),
-              )}
+              {filteredCars.map((car) => (
+                <VehicleCard
+                  key={car._id}
+                  vehicle={car}
+                  onBookNow={openBookingModal}
+                >
+                  <CarWithDriverService
+                    driverChargePerDay={car.driverChargePerDay}
+                    pricePerDay={car.pricePerDay}
+                    pricePerHour={car.pricePerHour}
+                  />
+                </VehicleCard>
+              ))}
             </div>
           ) : (
             <BlankState
@@ -102,6 +153,20 @@ const CarWithDriver = () => {
               description="Car With Driver cars are not available currently."
             />
           )}
+
+          <BookingModal
+            open={isOpen}
+            onClose={closeBookingModal}
+            title="Book Your Vehicle"
+            subtitle="Fill details to confirm booking"
+            vehicle={selectedVehicle}
+          >
+            <VehicleSummary vehicle={selectedVehicle} prices={prices} />
+            <CarWithDriverBookingForm
+              vehicle={selectedVehicle}
+              onClose={closeBookingModal}
+            />
+          </BookingModal>
         </div>
       </section>
     </ApiState>

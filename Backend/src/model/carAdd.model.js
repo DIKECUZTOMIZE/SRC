@@ -94,7 +94,16 @@ const carSchema = new mongoose.Schema(
       ],
       required: false,
     },
-
+    // AC TYPE
+    // AC TYPE
+    acType: {
+      type: String,
+      enum: [
+        "AC",
+        "Non AC",
+      ],
+      default: undefined,
+    },
 
     seats: {
       type: Number,

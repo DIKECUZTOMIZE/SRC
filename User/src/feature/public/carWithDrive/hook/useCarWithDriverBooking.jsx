@@ -1,69 +1,66 @@
-import { useLocation } from "react-router";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-import { createDriverBooking } from "../api/driverBooking.api";
 
-const useCarWithDriverBooking = () => {
-  const location = useLocation();
-  const car = location.state?.car;
+const useCarWithDriverBooking = (vehicle) => {
+  const methods = useForm({
+    defaultValues: {
+      tripType: "local", // local | outstation
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+      pickupLocation: "",
+      dropLocation: "",
 
-  const bookingMutation = useMutation({
-    mutationFn: createDriverBooking,
+      travelDate: "",
+      travelTime: "",
+      returnDate: "",
+      returnTime: "",
+
+      name: "",
+      mobile: "",
+      whatsapp: "",
+      email: "",
+
+      passengers: 1,
+
+      fullAddress: "",
+      landmark: "",
+      state: "Assam",
+      district: "",
+      policeStation: "",
+      pincode: "",
+
+      paymentMethod: "cash",
+
+      notes: "",
+    },
   });
 
+  const tripType = methods.watch("tripType");
+
   const onSubmit = async (data) => {
-    if (!car?._id) {
-      console.log("Vehicle id missing");
-      return;
-    }
-    const payload = {
-      vehicleId: car._id,
-      bookingType: data.bookingType,
-      quantity: Number(data.quantity),
+    const bookingData = {
+      ...data,
 
-      tripType: data.tripType,
+      vehicleId: vehicle?._id,
 
-      pickupLocation: data.pickupLocation,
-      destination: data.destination,
-
-      pickupDate: data.pickupDate,
-      pickupTime: data.pickupTime,
-      timePeriod: data.timePeriod,
-
-      customer: {
-        name: data.customer.name,
-        mobile: data.customer.mobile,
-        email: data.customer.email,
-        whatsapp: data.customer.whatsapp,
+      vehicle: {
+        brand: vehicle?.brand,
+        model: vehicle?.model,
+        classification: vehicle?.classification,
+        seats: vehicle?.seats,
+        fuel: vehicle?.fuel,
+        transmission: vehicle?.transmission,
+        image: vehicle?.image,
       },
-
-      address: {
-        currentAddress: data.address.currentAddress,
-        state: data.address.state,
-        city: data.address.city,
-        policeStation: data.address.policeStation,
-        pinCode: data.address.pinCode,
-      },
-
-      paymentMethod: data.paymentMethod,
     };
-    console.log(payload.vehicleId);
-    await bookingMutation.mutateAsync(payload);
+
+    console.log(bookingData);
+
+    // await carWithDriverBookingApi(bookingData);
   };
 
   return {
-    car,
-    register,
-    handleSubmit,
-    errors,
+    ...methods,
+    tripType,
     onSubmit,
-    bookingMutation,
   };
 };
 

@@ -35,7 +35,7 @@ const VehicleCard = ({
     seats = 0,
     fuel,
     transmission,
-    ac = false,
+    acType = "",
   } = vehicle;
 
   const image = vehicleImage?.startsWith("http")
@@ -116,13 +116,15 @@ const VehicleCard = ({
 
           <Spec icon={Fuel} text={fuel} />
 
-          <Spec icon={Snowflake} text={ac ? "AC" : "Non AC"} />
+          {/* <Spec icon={Snowflake} text={acType ? "AC" : "Non AC"} /> */}
+
+          <Spec icon={Snowflake} text={acType || "Non AC"} />
 
           <Spec icon={Gauge} text={transmission} />
         </div>
 
         {/* Service Section */}
-        {children}
+        {showAction && children}
 
         {/* Footer */}
         {showAction && (

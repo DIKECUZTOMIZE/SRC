@@ -32,9 +32,8 @@ export const cardTokens = {
     "p-2 sm:p-3.5 md:p-4 border-b border-[var(--color-border)] flex items-center justify-between gap-1.5 min-w-0",
 
   // Title: Readable Prominent Font (Mobile pe text-sm/base, desktop pe text-lg/xl)
-  title:
-    "text-sm sm:text-base md:text-lg font-bold text-[var(--color-text-primary)] leading-snug tracking-tight line-clamp-1 min-w-0",
-
+ title:
+  "text-xl sm:text-2xl md:text-3xl font-bold text-[var(--color-text-primary)] leading-tight tracking-tight line-clamp-1 min-w-0",
   // Description: Clear & Legible Text
   description:
     "text-xs sm:text-sm text-[var(--color-text-secondary)] mt-0.5 leading-snug line-clamp-2 min-w-0 font-medium",

@@ -1,5 +1,10 @@
 import React from "react";
-import { BadgeIndianRupee, Sparkles,CircleCheckBig ,XCircle} from "lucide-react";
+import {
+  BadgeIndianRupee,
+  Sparkles,
+  CircleCheckBig,
+  XCircle,
+} from "lucide-react";
 
 import { vehicleCardToken } from "../../../../../shared/styles";
 
@@ -43,7 +48,10 @@ const WeddingCarService = ({
           <>
             <div key={service.label} className={vehicleCardToken.serviceRow}>
               <div className="flex items-center gap-2">
-                <CircleCheckBig size={14} className={vehicleCardToken.specIcon} />
+                <CircleCheckBig
+                  size={14}
+                  className={vehicleCardToken.specIcon}
+                />
 
                 <span className={vehicleCardToken.serviceLabel}>
                   Select Car
