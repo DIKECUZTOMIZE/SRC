@@ -8,7 +8,7 @@ import {
     adminDashboardController,
     adminLoginController,
 } from "./auth.controller.js";
-import { validate } from "../../../validator/validate .js";
+import { validate } from "../../../validator/validate.js";
 import { loginSchema, registerSchema } from "../../../schema/auth.schema.js";
 import asyncHandle from "../../../shared/utils/asyncHandle.js";
 import {
