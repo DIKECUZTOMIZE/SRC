@@ -183,7 +183,11 @@ const CarCategoryListDetails = () => {
           {/* HERO IMAGE CONTAINER */}
           <div className="relative w-full h-80 sm:h-[440px] bg-slate-950 overflow-hidden group">
             <img
-              src={car?.image ? `http://localhost:3000${car.image}` : null}
+              src={
+                car?.image
+                  ? `${import.meta.env.VITE_API_URL}${car.image}`
+                  : null
+              }
               alt={car?.model}
               className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
               onError={(e) => {
@@ -371,7 +375,7 @@ const CarCategoryListDetails = () => {
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md p-4 flex items-center justify-center cursor-zoom-out animate-fadeIn"
         >
           <img
-            src={`http://localhost:3000/uploads/cars/${car.image}`}
+            src={`${import.meta.env.VITE_API_URL}/uploads/cars/${car.image}`}
             alt={car.model}
             className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl"
           />
