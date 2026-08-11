@@ -4,7 +4,7 @@ import { updateBookingStatusService, getBookingService, getBookingsService, getM
 import { StatusCodes } from "http-status-codes";
 import { nanoid } from "nanoid";
 import AddCarModel from "../../../model/carAdd.model.js";
-import SelfDriveDao from "../../../dao/SelfDrive.dao.js";
+import SelfDriveDao from "../../../dao/selfDrive.dao.js";
 import { getIO } from "../../../socket/server.socket.js";
 
 
