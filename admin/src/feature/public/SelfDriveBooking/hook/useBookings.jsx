@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import socket from "../../../../socket/socket";
-import { BookingListApi } from "../api/bookingListApi";
+import { BookingListApi } from "../api/BookingListApi";
 
 export const useBookings = () => {
   const [bookings, setBookings] = useState([]);
