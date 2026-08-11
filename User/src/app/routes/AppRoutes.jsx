@@ -19,9 +19,8 @@ import Home from "../../feature/public/home/ui/page/Home";
 import TermsConditions from "../../feature/public/home/ui/page/TermsConditions";
 
 import SelfDrive from "../../feature/public/selfDriveBooking/ui/page/SelfDrive";
-import SelfBookingStatus from "../../feature/public/selfDriveBooking/ui/components/selfBookingStatus";
-import SelfBookingStatusDetails from "../../feature/public/selfDriveBooking/ui/components/SelfBookingStatusDetails";
-
+ import SelfBookingStatusDetails from "../../feature/public/selfDriveBooking/ui/components/SelfBookingStatusDetails";
+import SelfBookingStatus from "../../feature/public/selfDriveBooking/ui/components/SelfBookingStatus";
 import CarWithDrive from "../../feature/public/carWithDrive/ui/page/CarWithDrive";
 
 import AirportTransfer from "../../feature/public/Airport Transfer/ui/page/AirportTransfer";
