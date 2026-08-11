@@ -21,14 +21,14 @@ export const app_config = () => {
             accessToken: {
                 httpOnly: false,
                 secure: env.NODE_ENV === "production",
-                sameSite: "lax",
+                sameSite: env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: env.NODE_ENV === "production" ? 60 * 60 * 1000
                     : 7 * 24 * 60 * 60 * 1000,
             },
             refreshToken: {
                 httpOnly: true,
                 secure: env.NODE_ENV === "production",
-                sameSite: "lax",
+                sameSite: env.NODE_ENV === "production" ? "none" : "lax",
                 maxAge: env.NODE_ENV === "production" ? 30 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000
             }
         }
