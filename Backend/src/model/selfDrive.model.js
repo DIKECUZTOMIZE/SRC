@@ -19,7 +19,7 @@ const selfDriveBookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
-     
+
     },
 
 
@@ -233,39 +233,39 @@ const selfDriveBookingSchema = new mongoose.Schema(
 
 
     // pricing
-pricing: {
+    pricing: {
 
-  hourRate: {
-    type: Number,
-    default: 0,
-  },
+      hourRate: {
+        type: Number,
+        default: 0,
+      },
 
-  dayRate: {
-    type: Number,
-    default: 0,
-  },
+      dayRate: {
+        type: Number,
+        default: 0,
+      },
 
-  extraHourRate: {
-    type: Number,
-    default: 0,
-  },
+      extraHourRate: {
+        type: Number,
+        default: 0,
+      },
 
-},
+    },
 
-baseAmount: {
-  type: Number,
-  required: true,
-},
+    baseAmount: {
+      type: Number,
+      required: true,
+    },
 
-extraCharge: {
-  type: Number,
-  default: 0,
-},
+    extraCharge: {
+      type: Number,
+      default: 0,
+    },
 
-totalAmount: {
-  type: Number,
-  required: true,
-},
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
 
     // Payment
     paymentMethod: {
@@ -296,7 +296,7 @@ totalAmount: {
         "Cancelled"
       ],
       default: "Not Started",
-     
+
     },
 
 
@@ -315,7 +315,7 @@ totalAmount: {
         "Cancelled"
       ],
       default: "Pending",
-     
+
     },
 
 

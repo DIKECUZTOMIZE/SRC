@@ -1,52 +1,40 @@
 import React, { useMemo } from "react";
 import { useFormContext } from "react-hook-form";
-import { Car, Route, CreditCard, Tag, ShieldAlert, Sparkles } from "lucide-react";
 
+import { Car, CreditCard, Tag, Sparkles } from "lucide-react";
 import Card from "../../../../../../shared/components/ui/Card";
 import priceSummaryToken from "../../../../../../shared/styles/priceSummaryToken";
- 
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount || 0);
-};
-
-const formatServiceLabel = (type) => {
-  if (!type) return "-";
-  if (type === "roundTrip") return "Round Trip";
-  return type.charAt(0).toUpperCase() + type.slice(1);
-};
 
 const PriceSummaryCard = React.memo(({ vehicle }) => {
-  const formContext = useFormContext();
-  const watch = formContext?.watch;
+  console.log(vehicle);
+  const { watch } = useFormContext();
+  const serviceType = watch("serviceType");
+  const paymentMethod = watch("paymentMethod");
 
-  const tripType = watch ? watch("tripType") : "local";
-  const serviceType = watch ? watch("serviceType") : "pickup";
-  const paymentMethod = watch ? watch("paymentMethod") : "-";
+  const hours = watch("hours");
+  const days = watch("days");
 
-  // Compute Total Fare dynamically
-  const totalFare = useMemo(() => {
-    if (tripType !== "local" || !vehicle) return 0;
+  const baseFare = useMemo(() => {
+    if (!vehicle) return 0;
 
-    switch (serviceType) {
-      case "pickup":
-        return vehicle?.pickupPrice || 0;
-      case "drop":
-        return vehicle?.dropPrice || 0;
-      case "roundTrip":
-        return vehicle?.roundTripPrice || 0;
-      default:
-        return 0;
+    if (serviceType === "hourly") {
+      return (vehicle.pricePerHour || 0) * (Number(hours) || 1);
     }
-  }, [tripType, serviceType, vehicle]);
 
-  const vehicleName = useMemo(() => {
-    if (!vehicle) return "Standard Vehicle";
-    return `${vehicle.brand || ""} ${vehicle.model || ""}`.trim();
+    if (serviceType === "daily") {
+      return (vehicle.pricePerDay || 0) * (Number(days) || 1);
+    }
+
+    return 0;
+  }, [vehicle, serviceType, hours, days]);
+
+  const driverCharge = useMemo(() => {
+    if (!vehicle) return 0;
+
+    return vehicle.driverChargePerDay || 0; // fixed driver charge
   }, [vehicle]);
+
+  const totalFare = baseFare + driverCharge;
 
   return (
     <Card className={priceSummaryToken.card}>
@@ -54,12 +42,14 @@ const PriceSummaryCard = React.memo(({ vehicle }) => {
         <div className="flex items-center justify-between">
           <div>
             <Card.Title className={priceSummaryToken.title}>
-              Booking Summary
+              Car With Driver Summary
             </Card.Title>
+
             <Card.Description className={priceSummaryToken.description}>
-              Review your trip parameters & price details
+              Review vehicle, driver charges & total booking fare
             </Card.Description>
           </div>
+
           <span className="rounded-full bg-emerald-50 p-2 text-emerald-600 border border-emerald-100">
             <Sparkles size={18} />
           </span>
@@ -68,43 +58,38 @@ const PriceSummaryCard = React.memo(({ vehicle }) => {
 
       <Card.Body className={priceSummaryToken.body}>
         <div className="space-y-3.5">
-          {/* Vehicle Info */}
           <div className={priceSummaryToken.row}>
             <span className={priceSummaryToken.label}>
-              <Car size={15} className="text-slate-400" />
-              Vehicle Selected
+              <Car size={15} />
+              Vehicle
             </span>
-            <span className={priceSummaryToken.value}>{vehicleName}</span>
-          </div>
 
-          {/* Trip Type */}
-          <div className={priceSummaryToken.row}>
-            <span className={priceSummaryToken.label}>
-              <Route size={15} className="text-slate-400" />
-              Trip Type
-            </span>
-            <span className={priceSummaryToken.badge}>
-              {tripType || "Local"}
-            </span>
-          </div>
-
-          {/* Service Type */}
-          <div className={priceSummaryToken.row}>
-            <span className={priceSummaryToken.label}>
-              <Tag size={15} className="text-slate-400" />
-              Service
-            </span>
             <span className={priceSummaryToken.value}>
-              {formatServiceLabel(serviceType)}
+              {vehicle ? `${vehicle.brand} ${vehicle.model}` : "-"}
             </span>
           </div>
 
-          {/* Payment Method */}
           <div className={priceSummaryToken.row}>
             <span className={priceSummaryToken.label}>
-              <CreditCard size={15} className="text-slate-400" />
+              <Tag size={15} />
+              Rental Type
+            </span>
+
+            <span className={priceSummaryToken.value}>
+              {serviceType === "hourly"
+                ? "Hourly Rental"
+                : serviceType === "daily"
+                  ? "Daily Rental"
+                  : "-"}
+            </span>
+          </div>
+
+          <div className={priceSummaryToken.row}>
+            <span className={priceSummaryToken.label}>
+              <CreditCard size={15} />
               Payment Mode
             </span>
+
             <span className={priceSummaryToken.value}>
               {paymentMethod ? paymentMethod.toUpperCase() : "-"}
             </span>
@@ -112,36 +97,25 @@ const PriceSummaryCard = React.memo(({ vehicle }) => {
 
           <hr className={priceSummaryToken.divider} />
 
-          {/* Fare Summary Logic */}
-          {tripType === "local" ? (
-            <div>
-              <div className={priceSummaryToken.totalRow}>
-                <span className={priceSummaryToken.totalLabel}>Total Fare</span>
-                <span className={priceSummaryToken.totalPrice}>
-                  {formatCurrency(totalFare)}
-                </span>
-              </div>
+          <div className={priceSummaryToken.row}>
+            <span className={priceSummaryToken.label}>Car Rental Price</span>
 
-              <p className={priceSummaryToken.disclaimer}>
-                * Excludes state taxes, parking, and toll fees unless specifically detailed in trip terms.
-              </p>
-            </div>
-          ) : (
-            <div className={priceSummaryToken.quoteCard}>
-              <div className={priceSummaryToken.quoteTitle}>
-                <ShieldAlert size={16} className="text-amber-600 shrink-0" />
-                Custom Quote Required
-              </div>
+            <span className={priceSummaryToken.value}>₹{baseFare}</span>
+          </div>
 
-              <p className={priceSummaryToken.quoteText}>
-                Outstation routes are dynamically priced based on exact distance, driver allowances, and permits.
-              </p>
+          <div className={priceSummaryToken.row}>
+            <span className={priceSummaryToken.label}>Driver Fixed Charge</span>
 
-              <div className={priceSummaryToken.quoteHighlight}>
-                Team will contact via Call / WhatsApp with quotation.
-              </div>
-            </div>
-          )}
+            <span className={priceSummaryToken.value}>₹{driverCharge}</span>
+          </div>
+
+          <hr className={priceSummaryToken.divider} />
+
+          <div className={priceSummaryToken.totalRow}>
+            <span className={priceSummaryToken.totalLabel}>Final Total</span>
+
+            <span className={priceSummaryToken.totalPrice}>₹{totalFare}</span>
+          </div>
         </div>
       </Card.Body>
     </Card>
@@ -150,4 +124,4 @@ const PriceSummaryCard = React.memo(({ vehicle }) => {
 
 PriceSummaryCard.displayName = "PriceSummaryCard";
 
-export default PriceSummaryCard;
+export default React.memo(PriceSummaryCard);

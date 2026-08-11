@@ -1,110 +1,45 @@
-import { FormProvider, useForm } from "react-hook-form";
-// Sections
+import React from "react";
+import {
+  Form,
+  FormActions,
+  SubmitButton,
+} from "../../../../../shared/components/ui/Form";
 
-import BookingDuration from "./form/BookingDuration";
-import EventDetails from "./form/EventDetails";
-import DecorationSection from "./form/DecorationSection";
-import DriverSection from "./form/DriverSection";
-import DeliverySection from "./form/DeliverySection";
-import CustomerSection from "./form/CustomerSection";
-import AddressSection from "./form/AddressSection";
-import NotesSection from "./form/NotesSection";
-import CarSummary from "./form/CarSummary";
+import AddressSection from "./formSection/AddressSection";
+import PriceSummaryCard from "./formSection/PriceSummaryCard";
+import CustomerSectionSection from "./formSection/CustomerSectionSection";
+import PaymentSection from "./formSection/PaymentSection";
+import { Button } from "../../../../../shared/components/ui";
+import useWeddingBooking from "../../hook/useWeddingBooking";
 
-const WeddingBookingForm = () => {
-  const methods = useForm({
-    defaultValues: {
-      bookingDuration: {
-        bookingType: "One Day",
-        totalDays: 1,
-        startDate: "",
-        endDate: "",
-        startTime: "",
-        endTime: "",
-        timePeriod: "AM",
-      },
+import TripDetailsSection from "./formSection/TripDetailsSection";
+import DecorationSection from "./formSection/DecorationSection";
 
-      eventDetails: {
-        bookingFor: "Wedding",
-        venueName: "",
-        venueAddress: "",
-        pickupLocation: "",
-        dropLocation: "",
-      },
-
-      decoration: {
-        decorationType: "",
-      },
-
-      driverRequired: "No",
-
-      deliveryType: "Self Pickup",
-
-      deliveryDetails: {
-        address: "",
-        city: "",
-        pinCode: "",
-      },
-
-      customer: {
-        name: "",
-        mobile: "",
-        email: "",
-        whatsapp: "",
-      },
-
-      address: {
-        currentAddress: "",
-        city: "",
-        state: "",
-        pinCode: "",
-      },
-
-      note: "",
-    },
-  });
-
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+const WeddingBookingForm = ({ vehicle, onClose }) => {
+  const methods = useWeddingBooking(vehicle);
 
   return (
-    <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-      <CarSummary />
+    <Form methods={methods} onSubmit={methods.onSubmit}>
+      <DecorationSection vehicle={vehicle} />
+      <TripDetailsSection vehicle={vehicle} />
 
-      <BookingDuration />
-
-      <EventDetails />
-
-      <DecorationSection />
-
-      <DriverSection />
-
-      <DeliverySection />
-
-      <CustomerSection />
+      <CustomerSectionSection />
 
       <AddressSection />
+      <PaymentSection />
+      <PriceSummaryCard vehicle={vehicle} />
 
-      <NotesSection />
+      {/* <AdditionalNotesSection /> */}
 
-      <div className="flex justify-end gap-4 pt-6">
-        <button
-          type="button"
-          className="px-6 py-3 rounded-lg border border-gray-300"
-        >
-          Back
-        </button>
+      <FormActions>
+        <Button type="button" variant="secondary" onClick={onClose}>
+          Cancel
+        </Button>
 
-        <button
-          type="submit"
-          className="px-8 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
-        >
-          Proceed To Payment
-        </button>
-      </div>
-    </form>
+        <SubmitButton>Confirm Booking</SubmitButton>
+      </FormActions>
+    </Form>
   );
 };
 
-export default WeddingBookingForm;
+export default React.memo(WeddingBookingForm);

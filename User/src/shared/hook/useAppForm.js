@@ -8,7 +8,19 @@ const useAppForm = ({
   shouldFocusError = true,
 } = {}) => {
   return useForm({
-    defaultValues,
+    defaultValues: {
+      services: {
+        selfDrive: false,
+        carWithDriver: false,
+        weddingCar: false,
+        premiumCar: false,
+        tempoTraveller: false,
+        airportTransfer: false,
+      },
+
+      ...defaultValues,
+    },
+
     resolver,
     mode,
     reValidateMode,

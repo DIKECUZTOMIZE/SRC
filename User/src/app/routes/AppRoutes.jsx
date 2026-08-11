@@ -15,23 +15,21 @@ import Login from "../../feature/public/auth/ui/page/Login";
 import Register from "../../feature/public/auth/ui/page/Register";
 
 import Home from "../../feature/public/home/ui/page/Home";
-import CarAdd from "../../feature/public/addCar/ui/page/AddCar";
-
+ 
 import TermsConditions from "../../feature/public/home/ui/page/TermsConditions";
 
 import SelfDrive from "../../feature/public/selfDriveBooking/ui/page/SelfDrive";
-import SelfBooking from "../../feature/public/selfDriveBooking/ui/components/SelfBooking";
 import SelfBookingStatus from "../../feature/public/selfDriveBooking/ui/components/selfBookingStatus";
 import SelfBookingStatusDetails from "../../feature/public/selfDriveBooking/ui/components/SelfBookingStatusDetails";
 
 import CarWithDrive from "../../feature/public/carWithDrive/ui/page/CarWithDrive";
- 
+
 import AirportTransfer from "../../feature/public/Airport Transfer/ui/page/AirportTransfer";
 import TempoTravellerBus from "../../feature/public/Tempo Traveller & Bus/page/TempoTravellerBus";
 import Wedding from "../../feature/public/wedding/ui/page/Wedding";
 import About from "../../feature/public/about/ui/page/About";
 import PremiumWithCar from "../../feature/public/premiumCarwithDriver/ui/page/PremiumWithCar";
-import WeddingBookingPage from "../../feature/public/wedding/ui/page/WeddingBookingPage";
+import AddCar from "../../feature/public/addCar/ui/page/AddCar";
 const router = createBrowserRouter([
   // AUTH ROUTES
 
@@ -74,7 +72,7 @@ const router = createBrowserRouter([
             path: "about",
             element: <About />,
           },
-          { path: "car-add", element: <CarAdd /> },
+          { path: "add-car", element: <AddCar /> },
           {
             path: "terms-and-condition",
             element: <TermsConditions />,
@@ -85,20 +83,12 @@ const router = createBrowserRouter([
             path: "self-drive",
             element: <SelfDrive />,
           },
-          {
-            path: "self-booking/:id",
-            element: <SelfBooking />,
-          },
 
           // Car With Driver
           {
             path: "car-with-driver",
             element: <CarWithDrive />,
           },
-          // {
-          //  path: "driver-booking/:id",
-          //   element: <DriverBookingForm />,
-          // }, 
 
           // Premium
           {
@@ -110,10 +100,6 @@ const router = createBrowserRouter([
             path: "airport",
             element: <AirportTransfer />,
           },
-          // {
-          //   path: "airportBookingForm",
-          //   element: <AirportCarForm />,
-          // },
 
           // Tempo Traveller
           {
@@ -127,10 +113,6 @@ const router = createBrowserRouter([
             element: <Wedding />,
           },
 
-          {
-            path: "weddingBookingPage",
-            element: <WeddingBookingPage />,
-          },
           // Orders
           {
             path: "order",

@@ -17,8 +17,8 @@ const airportTransferBookingSchema = new mongoose.Schema(
         serviceType: {
             type: String,
             default: "Airport Transfer",
+            trim: true,
         },
-
 
 
         // LOGIN USER
@@ -27,7 +27,7 @@ const airportTransferBookingSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             default: null,
-
+            index: true,
         },
 
 
@@ -43,26 +43,31 @@ const airportTransferBookingSchema = new mongoose.Schema(
             brand: {
                 type: String,
                 required: true,
+                trim: true,
             },
 
             model: {
                 type: String,
                 required: true,
+                trim: true,
             },
 
             classification: {
                 type: String,
                 required: true,
+                trim: true,
             },
 
             fuel: {
                 type: String,
                 default: "",
+                trim: true,
             },
 
             transmission: {
                 type: String,
                 default: "",
+                trim: true,
             },
 
             seats: {
@@ -73,6 +78,12 @@ const airportTransferBookingSchema = new mongoose.Schema(
             image: {
                 type: String,
                 default: "",
+            },
+
+            vehicleNumber: {
+                type: String,
+                default: "",
+                trim: true,
             },
 
             basePrice: {
@@ -147,50 +158,68 @@ const airportTransferBookingSchema = new mongoose.Schema(
 
         // CUSTOMER
         customer: {
+
             name: {
                 type: String,
                 required: true,
                 trim: true,
             },
+
             mobile: {
                 type: String,
                 required: true,
+                trim: true,
+                match: [/^[6-9]\d{9}$/, "Invalid mobile number"],
             },
+
             email: {
                 type: String,
                 required: true,
                 lowercase: true,
+                trim: true,
+                match: [/^\S+@\S+\.\S+$/, "Invalid email"],
             },
-
 
             whatsapp: {
                 type: String,
                 default: "",
+                trim: true,
             }
-
 
         },
 
         // ADDRESS
         address: {
+
             currentAddress: {
                 type: String,
                 required: true,
+                trim: true,
             },
 
             city: {
                 type: String,
                 required: true,
+                trim: true,
             },
 
             state: {
                 type: String,
                 required: true,
+                trim: true,
+            },
+
+            policeStation: {
+                type: String,
+                default: "",
+                trim: true,
             },
 
             pinCode: {
                 type: String,
                 required: true,
+                trim: true,
+                match: [/^\d{6}$/, "Invalid PIN Code"],
             }
 
         },
@@ -257,17 +286,18 @@ const airportTransferBookingSchema = new mongoose.Schema(
             default: null,
         },
         driver: {
+
             name: {
                 type: String,
                 default: "",
+                trim: true,
             },
-
 
             mobile: {
                 type: String,
                 default: "",
+                trim: true,
             },
-
 
             image: {
                 type: String,
@@ -386,8 +416,12 @@ const airportTransferBookingSchema = new mongoose.Schema(
 
     },
     {
-        timestamps: true
-    });
+        timestamps: true,
+        versionKey: false,
+        minimize: false,
+    }
+
+);
 
 
 

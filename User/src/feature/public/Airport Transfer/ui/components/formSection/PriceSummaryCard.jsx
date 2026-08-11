@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   Car,
@@ -29,6 +29,7 @@ const formatServiceLabel = (type) => {
 const PriceSummaryCard = React.memo(({ vehicle }) => {
   const formContext = useFormContext();
   const watch = formContext?.watch;
+  const setValue = formContext?.setValue;
 
   const tripType = watch ? watch("tripType") : "local";
   const serviceType = watch ? watch("serviceType") : "pickup";
@@ -41,14 +42,26 @@ const PriceSummaryCard = React.memo(({ vehicle }) => {
     switch (serviceType) {
       case "pickup":
         return vehicle?.pickupPrice || 0;
+
       case "drop":
         return vehicle?.dropPrice || 0;
+
       case "roundTrip":
         return vehicle?.roundTripPrice || 0;
+
       default:
         return 0;
     }
   }, [tripType, serviceType, vehicle]);
+
+  useEffect(() => {
+    if (setValue) {
+      setValue("totalFare", totalFare, {
+        shouldValidate: false,
+        shouldDirty: true,
+      });
+    }
+  }, [totalFare, setValue]);
 
   const vehicleName = useMemo(() => {
     if (!vehicle) return "Standard Vehicle";

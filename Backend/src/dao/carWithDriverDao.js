@@ -1,8 +1,8 @@
 
 import AddCarModel from "../model/carAdd.model.js";
-import DriverBookingModel from "../model/normalWithCar.model.js";
+import CarWithDriverModel from "../model/carWithDriver.model.js";
 
-class NormalWithDriverDao {
+class CarWithDriverDao {
     async getAllCarsDao(filter) {
         return await AddCarModel.find(filter)
             .sort({ createdAt: -1 })
@@ -10,24 +10,24 @@ class NormalWithDriverDao {
     }
 
     async createBookingDao(payload) {
-        return await DriverBookingModel.create(payload);
+        return await CarWithDriverModel.create(payload);
     }
 
     async getAllBookingsDao() {
-        return await DriverBookingModel.find().sort({ createdAt: -1 });
+        return await CarWithDriverModel.find().sort({ createdAt: -1 });
     }
 
     async getBookingByIdDao(id) {
-        return await DriverBookingModel.findById(id);
+        return await CarWithDriverModel.findById(id);
     }
 
     async getUserBookingsDao(userId) {
-        return await DriverBookingModel.find({ user: userId })
+        return await CarWithDriverModel.find({ user: userId })
             .sort({ createdAt: -1 });
     }
 
     async updateBookingDao(id, payload) {
-        return await DriverBookingModel.findByIdAndUpdate(
+        return await CarWithDriverModel.findByIdAndUpdate(
             id,
             payload,
             { new: true }
@@ -35,8 +35,8 @@ class NormalWithDriverDao {
     }
 
     async deleteBookingDao(id) {
-        return await DriverBookingModel.findByIdAndDelete(id);
+        return await CarWithDriverModel.findByIdAndDelete(id);
     }
 }
 
-export default new NormalWithDriverDao();
+export default new CarWithDriverDao();

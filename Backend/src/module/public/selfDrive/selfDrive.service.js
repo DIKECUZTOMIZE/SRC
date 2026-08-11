@@ -1,4 +1,5 @@
-import selfDriveDao from "../../../dao/SelfDrive.dao.js";
+ 
+import SelfDriveDao from "../../../dao/SelfDrive.dao.js";
 import { AppError } from "../../../shared/error/appError.js";
 import { getIO } from "../../../socket/server.socket.js";
 
@@ -8,7 +9,7 @@ export const createBookingService = async (data) => {
 
   try {
 
-    const booking = await selfDriveDao.create(data);
+    const booking = await SelfDriveDao.create(data);
 
 
     const io = getIO();

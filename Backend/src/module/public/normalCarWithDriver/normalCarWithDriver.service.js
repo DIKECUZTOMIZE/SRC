@@ -1,5 +1,6 @@
 
-import normalWithDriverDao from "../../../dao/normalWithDriver.js";
+ 
+import CarWithDriverDao from "../../../dao/CarWithDriverDao.js";
 import AddCarModel from "../../../model/carAdd.model.js";
 import { calculateBookingAmount } from "../../../shared/utils/calculateBookingAmount.js";
 import { getIO } from "../../../socket/server.socket.js";
@@ -15,7 +16,7 @@ export const getAllCarsService = async () => {
     };
 
 
-    const cars = await normalWithDriverDao.getAllCarsDao(filter);
+    const cars = await CarWithDriverDao.getAllCarsDao(filter);
 
     return cars
 };
@@ -68,7 +69,7 @@ export const createBookingService = async (data) => {
 
     Object.assign(data, calculation);
     // Save Booking
-    const booking = await normalWithDriverDao.create(data);
+    const booking = await CarWithDriverDao.create(data);
 
     // Notify Admin
     const io = getIO();

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { Heart, CalendarDays } from "lucide-react";
 import useWeddingCar from "../../hook/useWeddingCar";
-import WeddingHeader from "../components/WeddingHeader";
-import WeddingFilter from "../components/WeddingFilter";
-import WeddingCarListCheck from "../components/WeddingCarListCheck";
+
 import ApiState from "../../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
 import { Button, FilterPanel } from "../../../../../shared/components/ui";
@@ -16,6 +14,7 @@ import { filterPanelToken } from "../../../../../shared/styles";
 import useBookingModal from "../../../../../shared/hook/useBookingModal";
 import BookingModal from "../../../../../shared/components/ui/BookingModal";
 import VehicleSummary from "../../../../../shared/components/ui/VehicleSummary";
+import WeddingBookingForm from "../components/WeddingBookingForm";
 
 const Wedding = () => {
   const { cars, isLoading, isError, error } = useWeddingCar();
@@ -54,7 +53,7 @@ const Wedding = () => {
     <ApiState isLoading={isLoading} error={error} isError={isError}>
       <section className="py-10 sm:py-14 px-4 sm:px-6 bg-slate-50 min-h-screen">
         <div className="max-w-7xl mx-auto">
-          <WeddingHeader cars={cars} />
+          {/* <WeddingHeader cars={cars} /> */}
 
           <SectionHeader
             badge="Guwahati Wedding Fleet"
@@ -148,11 +147,10 @@ const Wedding = () => {
             vehicle={selectedVehicle}
           >
             <VehicleSummary vehicle={selectedVehicle} prices={prices} />
-            {/* 
-                              <BookingForm
-                                vehicle={selectedVehicle}
-                                onClose={closeBookingModal}
-                              /> */}
+            <WeddingBookingForm
+              vehicle={selectedVehicle}
+              onClose={closeBookingModal}
+            />
           </BookingModal>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import express from "express";
 import { createSelfDriveBookingSchema } from "../../../schema/selfDrive.schema.js";
 import { validate } from "../../../validator/validate .js";
-import {  createSelfDriveBooking, deleteBooking, getBooking, getBookings, getMyBooking, getMyBookingsStatusList, getMyBookingStatusDetails, updateBooking, updateBookingStatus, } from "./selfDrive.controller.js";
+import { createSelfDriveBooking, deleteBooking, getBooking, getBookings, getMyBooking, getMyBookingsStatusList, getMyBookingStatusDetails, updateBooking, updateBookingStatus, } from "./selfDrive.controller.js";
 import { authMiddleware, authorizationMiddleware } from "../../../middleware/auth.middleware.js";
 import asyncHandler from "../../../shared/utils/asyncHandle.js";
 
@@ -15,6 +15,7 @@ router.post(
     validate(createSelfDriveBookingSchema),
     asyncHandler(createSelfDriveBooking)
 );
+
 
 
 // Get All Bookings (Admin)
@@ -78,7 +79,6 @@ router.delete(
 );
 
 
-
 // Update booking (Admin)
 router.put(
     "/booking-update/:id",
@@ -86,5 +86,7 @@ router.put(
     authorizationMiddleware("ADMIN"),
     asyncHandler(updateBooking)
 );
+
+
 export default router;
 

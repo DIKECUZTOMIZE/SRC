@@ -41,7 +41,9 @@ const FormField = React.memo(
         {/* Error */}
         {error && (
           <p id={errorId} role="alert" className={formToken.errorText}>
-            {error.message || error}
+            {typeof error === "string"
+              ? error
+              : error?.message || "This field is required"}
           </p>
         )}
       </div>

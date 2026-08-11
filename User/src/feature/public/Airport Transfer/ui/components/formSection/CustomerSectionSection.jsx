@@ -13,14 +13,15 @@ const CustomerSectionSection = React.memo(() => {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <InputField
-          name="fullName"
-          label="Full Name"
+          name="customer.name"
+          label="Customer Name"
+          type="text"
           placeholder="Enter your full name"
           required
         />
 
         <InputField
-          name="mobile"
+          name="customer.mobile"
           label="Mobile Number"
           type="tel"
           placeholder="+91 XXXXX XXXXX"
@@ -28,14 +29,14 @@ const CustomerSectionSection = React.memo(() => {
         />
 
         <InputField
-          name="whatsapp"
+          name="customer.whatsapp"
           label="WhatsApp Number"
           type="tel"
           placeholder="+91 XXXXX XXXXX"
         />
 
         <InputField
-          name="email"
+          name="customer.email"
           label="Email Address (Optional)"
           type="email"
           placeholder="example@email.com"

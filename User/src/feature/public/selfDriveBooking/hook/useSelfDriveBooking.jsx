@@ -1,173 +1,551 @@
-/* eslint-disable no-unused-vars */
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { createSelfDriveBooking } from "../api/selfDriveApi";
-import { useNavigate } from "react-router";
 
-const useSelfDriveBooking = (car, onClose) => {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm();
+// =========================================================
+// CONFIG
+// =========================================================
 
-  const navigate = useNavigate();
+const GOOGLE_SCRIPT_URL = import.meta.env.VITE_SELF_DRIVE_GOOGLE_SCRIPT_URL;
 
-  const bookingTypeValue = watch("bookingType");
+const ADMIN_WHATSAPP_NUMBER = import.meta.env.VITE_ADMIN_WHATSAPP_NUMBER || "";
 
-  const quantity = Number(watch("quantity") || 0);
+// =========================================================
+// DEFAULT VALUES
+// =========================================================
 
+const DEFAULT_VALUES = {
+  // RENTAL
+  serviceType: "hourly",
+  hours: 1,
+  days: 1,
+
+  // PICKUP / DELIVERY
+  deliveryType: "pickup",
+  deliveryAddress: "",
+  deliveryKm: "0-3",
+
+  // TRIP
+  pickupDate: "",
+  pickupTime: "",
+  pickupPeriod: "AM",
+  destination: "",
+
+  // ADDRESS
+  landmark: "",
+  district: "",
+  city: "",
+  pincode: "",
+  state: "assam",
+
+  // CUSTOMER
+  mobile: "",
+  whatsapp: "",
+  email: "",
+
+  // NOTES
+  notes: "",
+
+  // PAYMENT
+  paymentMethod: "cash",
+
+  // FARE
+  baseFare: 0,
+  deliveryCharge: 0,
+  totalFare: 0,
+};
+
+// =========================================================
+// DELIVERY CHARGE
+// =========================================================
+
+const getDeliveryCharge = (distance) => {
+  switch (distance) {
+    case "0-3":
+      return 0;
+
+    case "3-5":
+      return 300;
+
+    case "5-10":
+      return 500;
+
+    case "10+":
+      return 1000;
+
+    default:
+      return 0;
+  }
+};
+
+// =========================================================
+// SAFE STRING
+// =========================================================
+
+const cleanString = (value) => {
+  return String(value ?? "").trim();
+};
+
+// =========================================================
+// SAFE NUMBER
+// =========================================================
+
+const cleanNumber = (value, fallback = 0) => {
+  const number = Number(value);
+
+  return Number.isFinite(number) ? number : fallback;
+};
+
+// =========================================================
+// HOOK
+// =========================================================
+
+const useSelfDriveBooking = (vehicle) => {
+  const methods = useForm({
+    shouldUnregister: true,
+    defaultValues: DEFAULT_VALUES,
+  });
+
+  const { watch, resetField, clearErrors } = methods;
+
+  const serviceType = watch("serviceType");
   const deliveryType = watch("deliveryType");
 
-  // Distance from user input
-  const distance = Number(watch("distance") || 0);
+  const hours = watch("hours");
+  const days = watch("days");
+  const deliveryKm = watch("deliveryKm");
 
-  // Base Price Calculation
-  const baseAmount =
-    bookingTypeValue === "day"
-      ? Number(car.pricePerDay || 0) * quantity
-      : bookingTypeValue === "hour"
-        ? Number(car.pricePerHour || 0) * quantity
-        : 0;
+  // =======================================================
+  // CLEAR STALE DELIVERY DATA
+  // =======================================================
 
-  // Delivery Charge Calculation
-  const calculateDeliveryCharge = () => {
-    // Self Pickup
-    if (deliveryType !== "Drop") {
-      return 0;
+  useEffect(() => {
+    if (deliveryType === "pickup") {
+      resetField("deliveryAddress", {
+        defaultValue: "",
+      });
+
+      resetField("deliveryKm", {
+        defaultValue: "0-3",
+      });
+
+      clearErrors(["deliveryAddress", "deliveryKm"]);
     }
 
-    // 0-3 KM Free
-    if (distance <= 3) {
-      return 0;
+    if (deliveryType === "delivery") {
+      clearErrors(["deliveryAddress", "deliveryKm"]);
     }
+  }, [deliveryType, resetField, clearErrors]);
 
-    // 3-5 KM
-    if (distance <= 5) {
-      return 300;
-    }
-
-    // 5-10 KM
-    if (distance <= 10) {
-      return 500;
-    }
-
-    // Above 10 KM
-    return distance * 50;
-  };
-
-  const deliveryCharge = calculateDeliveryCharge();
-
-  // Final Amount
-  const amount = baseAmount + deliveryCharge;
+  // =======================================================
+  // SUBMIT
+  // =======================================================
 
   const onSubmit = async (data) => {
     try {
-      const finalData = {
-        // Vehicle
-        vehicleId: String(car._id),
+      // ===================================================
+      // CONFIG VALIDATION
+      // ===================================================
 
-        serviceType: "Self Drive",
+      if (!GOOGLE_SCRIPT_URL) {
+        throw new Error("Self Drive Google Script URL is missing.");
+      }
 
-        name: `${car.brand} ${car.model}`,
+      if (!ADMIN_WHATSAPP_NUMBER) {
+        throw new Error("Admin WhatsApp number is missing.");
+      }
 
-        fuel: car.fuel,
+      // ===================================================
+      // SERVICE TYPE
+      // ===================================================
 
-        transmission: car.transmission,
+      const currentService = data.serviceType === "daily" ? "daily" : "hourly";
 
-        seats: String(car.seats),
+      // ===================================================
+      // RENTAL DURATION
+      // ===================================================
 
-        pricePerHour: Number(car.pricePerHour),
+      const rentalHours =
+        currentService === "hourly"
+          ? Math.max(1, cleanNumber(data.hours, 1))
+          : 0;
 
-        pricePerDay: Number(car.pricePerDay),
+      const rentalDays =
+        currentService === "daily" ? Math.max(1, cleanNumber(data.days, 1)) : 0;
 
-        // Booking
+      // ===================================================
+      // DELIVERY
+      // ===================================================
 
-        bookingType: data.bookingType,
+      const currentDeliveryType =
+        data.deliveryType === "delivery" ? "delivery" : "pickup";
 
-        quantity: Number(data.quantity),
+      let deliveryAddress = "";
+      let selectedDeliveryKm = "0-3";
+      let deliveryCharge = 0;
 
-        pickupDate: data.pickupDate,
+      if (currentDeliveryType === "delivery") {
+        deliveryAddress = cleanString(data.deliveryAddress);
 
-        pickupTime: data.timePeriod
-          ? `${data.pickupTime} ${data.timePeriod}`
-          : data.pickupTime,
+        selectedDeliveryKm = cleanString(data.deliveryKm) || "0-3";
 
-        timePeriod: data.timePeriod,
-        // Delivery
-        deliveryType: data.deliveryType,
+        deliveryCharge = getDeliveryCharge(selectedDeliveryKm);
+      }
 
-        deliveryAddress: data.deliveryAddress || "",
+      // ===================================================
+      // VEHICLE DATA
+      // ===================================================
 
-        distance: Number(data.distance || 0),
+      const vehicleData = {
+        id: cleanString(vehicle?._id),
 
-        // Customer
-        customer: {
-          name: data.customer.name,
+        brand: cleanString(vehicle?.brand),
 
-          mobile: data.customer.mobile,
+        model: cleanString(vehicle?.model),
 
-          email: data.customer.email,
+        classification: cleanString(vehicle?.classification),
 
-          whatsapp: data.customer.whatsapp || "",
+        seats: cleanNumber(vehicle?.seats, 0),
 
-          currentAddress: data.customer.currentAddress,
-        },
+        fuel: cleanString(vehicle?.fuel),
 
-        // Address
-        address: {
-          state: data.address.state,
+        transmission: cleanString(vehicle?.transmission),
 
-          city: data.address.city,
+        image: cleanString(vehicle?.image),
 
-          policeStation: data.address.policeStation || "",
+        pricePerHour: cleanNumber(vehicle?.pricePerHour, 0),
 
-          pinCode: data.address.pinCode,
-        },
+        pricePerDay: cleanNumber(vehicle?.pricePerDay, 0),
+      };
 
-        // Price
-        baseAmount,
+      // ===================================================
+      // VEHICLE VALIDATION
+      // ===================================================
+
+      if (!vehicleData.id) {
+        throw new Error("Vehicle information is missing.");
+      }
+
+      // ===================================================
+      // BASE FARE
+      // ===================================================
+
+      let baseFare = 0;
+
+      if (currentService === "hourly") {
+        baseFare = vehicleData.pricePerHour * rentalHours;
+      }
+
+      if (currentService === "daily") {
+        baseFare = vehicleData.pricePerDay * rentalDays;
+      }
+
+      // ===================================================
+      // FINAL TOTAL
+      // ===================================================
+
+      const totalFare = baseFare + deliveryCharge;
+
+      // ===================================================
+      // FINAL BOOKING OBJECT
+      // ===================================================
+
+      const bookingData = {
+        // -----------------------------------------------
+        // BOOKING TYPE
+        // -----------------------------------------------
+
+        bookingType: "selfDrive",
+
+        serviceType: currentService,
+
+        // -----------------------------------------------
+        // RENTAL
+        // -----------------------------------------------
+
+        hours: rentalHours,
+
+        days: rentalDays,
+
+        // -----------------------------------------------
+        // PICKUP / DELIVERY
+        // -----------------------------------------------
+
+        deliveryType: currentDeliveryType,
+
+        deliveryAddress,
+
+        deliveryKm:
+          currentDeliveryType === "delivery" ? selectedDeliveryKm : "",
+
+        // -----------------------------------------------
+        // TRIP
+        // -----------------------------------------------
+
+        pickupDate: cleanString(data.pickupDate),
+
+        pickupTime: cleanString(data.pickupTime),
+
+        pickupPeriod: cleanString(data.pickupPeriod) || "AM",
+
+        destination: cleanString(data.destination),
+
+        // -----------------------------------------------
+        // ADDRESS
+        // -----------------------------------------------
+
+        landmark: cleanString(data.landmark),
+
+        district: cleanString(data.district),
+
+        city: cleanString(data.city),
+
+        pincode: cleanString(data.pincode),
+
+        state: cleanString(data.state) || "assam",
+
+        // -----------------------------------------------
+        // CUSTOMER
+        // -----------------------------------------------
+
+        mobile: cleanString(data.mobile),
+
+        whatsapp: cleanString(data.whatsapp),
+
+        email: cleanString(data.email),
+
+        // -----------------------------------------------
+        // NOTES
+        // -----------------------------------------------
+
+        notes: cleanString(data.notes),
+
+        // -----------------------------------------------
+        // VEHICLE
+        // -----------------------------------------------
+
+        vehicleId: vehicleData.id,
+
+        vehicle: vehicleData,
+
+        // -----------------------------------------------
+        // PAYMENT
+        // -----------------------------------------------
+
+        paymentMethod: cleanString(data.paymentMethod) || "cash",
+
+        // -----------------------------------------------
+        // FARE
+        // -----------------------------------------------
+
+        baseFare,
 
         deliveryCharge,
 
-        totalAmount: amount,
-
-        // Payment
-        paymentMethod: data.paymentMethod,
+        totalFare,
       };
-      console.log(finalData);
-      const response = await createSelfDriveBooking(finalData);
 
-      if (response?.success) {
-        navigate(`/home/selfBooking/${response.data._id}`);
+      // ===================================================
+      // DEBUG
+      // ===================================================
+
+      console.log("FINAL SELF DRIVE BOOKING:", bookingData);
+
+      // ===================================================
+      // GOOGLE SHEET
+      // ===================================================
+
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+
+        body: JSON.stringify(bookingData),
+      });
+
+      // ===================================================
+      // SERVER RESPONSE
+      // ===================================================
+
+      if (!response.ok) {
+        throw new Error(`Booking server error: ${response.status}`);
       }
+
+      // ===================================================
+      // PARSE RESPONSE
+      // ===================================================
+
+      const result = await response.json();
+
+      // ===================================================
+      // RESPONSE VALIDATION
+      // ===================================================
+
+      if (!result?.success) {
+        throw new Error(
+          result?.message || "Self Drive booking could not be saved.",
+        );
+      }
+
+      if (!result?.bookingId) {
+        throw new Error("Booking was saved but Booking ID was not returned.");
+      }
+
+      console.log("Self Drive booking saved:", result.bookingId);
+
+      // ===================================================
+      // RENTAL TEXT
+      // ===================================================
+
+      const rentalText =
+        currentService === "hourly"
+          ? `Hourly Rental: ${rentalHours} Hour${rentalHours > 1 ? "s" : ""}`
+          : `Daily Rental: ${rentalDays} Day${rentalDays > 1 ? "s" : ""}`;
+
+      // ===================================================
+      // DELIVERY TEXT
+      // ===================================================
+
+      const deliveryText =
+        currentDeliveryType === "delivery"
+          ? [
+              "Type: Delivery",
+              `Address: ${deliveryAddress || "-"}`,
+              `Distance: ${selectedDeliveryKm} KM`,
+              `Delivery Charge: ₹${deliveryCharge}`,
+            ].join("\n")
+          : "Type: Customer Pickup";
+
+      // ===================================================
+      // WHATSAPP MESSAGE
+      // ===================================================
+
+      const whatsappMessage = `
+🚗 NEW SELF DRIVE BOOKING
+
+━━━━━━━━━━━━━━━━━━
+🆔 BOOKING
+━━━━━━━━━━━━━━━━━━
+Booking ID: ${result.bookingId}
+
+━━━━━━━━━━━━━━━━━━
+👤 CUSTOMER
+━━━━━━━━━━━━━━━━━━
+Mobile: ${bookingData.mobile}
+WhatsApp: ${bookingData.whatsapp || "-"}
+Email: ${bookingData.email || "-"}
+
+━━━━━━━━━━━━━━━━━━
+🚘 RENTAL DETAILS
+━━━━━━━━━━━━━━━━━━
+Rental Type: ${currentService === "hourly" ? "Hourly Rental" : "Daily Rental"}
+
+${rentalText}
+
+Pickup Date: ${bookingData.pickupDate}
+Pickup Time: ${bookingData.pickupTime} ${bookingData.pickupPeriod}
+
+Destination: ${bookingData.destination || "-"}
+
+━━━━━━━━━━━━━━━━━━
+📦 PICKUP / DELIVERY
+━━━━━━━━━━━━━━━━━━
+${deliveryText}
+
+━━━━━━━━━━━━━━━━━━
+📍 ADDRESS
+━━━━━━━━━━━━━━━━━━
+Landmark: ${bookingData.landmark || "-"}
+District: ${bookingData.district || "-"}
+City: ${bookingData.city || "-"}
+PIN Code: ${bookingData.pincode || "-"}
+State: ${bookingData.state}
+
+━━━━━━━━━━━━━━━━━━
+🚗 VEHICLE
+━━━━━━━━━━━━━━━━━━
+Brand: ${bookingData.vehicle.brand || "-"}
+Model: ${bookingData.vehicle.model || "-"}
+Class: ${bookingData.vehicle.classification || "-"}
+Seats: ${bookingData.vehicle.seats || 0}
+Fuel: ${bookingData.vehicle.fuel || "-"}
+Transmission: ${bookingData.vehicle.transmission || "-"}
+
+━━━━━━━━━━━━━━━━━━
+💰 FARE
+━━━━━━━━━━━━━━━━━━
+Base Fare: ₹${bookingData.baseFare}
+Delivery Charge: ₹${bookingData.deliveryCharge}
+Total Fare: ₹${bookingData.totalFare}
+
+━━━━━━━━━━━━━━━━━━
+💳 PAYMENT
+━━━━━━━━━━━━━━━━━━
+Payment: ${bookingData.paymentMethod}
+
+━━━━━━━━━━━━━━━━━━
+📝 NOTES
+━━━━━━━━━━━━━━━━━━
+${bookingData.notes || "-"}
+
+━━━━━━━━━━━━━━━━━━
+📌 STATUS
+━━━━━━━━━━━━━━━━━━
+Pending
+`.trim();
+
+      // ===================================================
+      // ADMIN WHATSAPP
+      // ===================================================
+
+      const adminNumber = String(ADMIN_WHATSAPP_NUMBER).replace(/\D/g, "");
+
+      if (!adminNumber) {
+        throw new Error("Invalid admin WhatsApp number.");
+      }
+
+      // ===================================================
+      // WHATSAPP URL
+      // ===================================================
+
+      const whatsappUrl =
+        `https://wa.me/${adminNumber}?text=` +
+        encodeURIComponent(whatsappMessage);
+
+      // ===================================================
+      // OPEN WHATSAPP
+      // ONLY AFTER SHEET SUCCESS
+      // ===================================================
+
+      window.location.href = whatsappUrl;
+
+      return result;
     } catch (error) {
-      console.log("Booking Error", error.response?.data || error);
+      console.error("Self Drive booking error:", error);
+
+      throw error;
     }
   };
 
+  // =======================================================
+  // RETURN
+  // =======================================================
+
   return {
-    register,
+    ...methods,
 
-    handleSubmit,
-
-    watch,
-
-    reset,
-
-    onSubmit,
-
-    bookingTypeValue,
+    serviceType,
 
     deliveryType,
 
-    amount,
+    hours,
 
-    baseAmount,
+    days,
 
-    deliveryCharge,
-    errors,
+    deliveryKm,
+
+    onSubmit,
   };
 };
 

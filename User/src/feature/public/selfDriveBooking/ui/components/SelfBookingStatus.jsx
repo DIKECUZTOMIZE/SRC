@@ -54,7 +54,9 @@ const SelfBookingStatus = () => {
           <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-100">
             <FileSearch size={32} />
           </div>
-          <h3 className="text-xl font-bold text-slate-800 mb-2">No Bookings Found</h3>
+          <h3 className="text-xl font-bold text-slate-800 mb-2">
+            No Bookings Found
+          </h3>
           <p className="text-slate-500 text-sm mb-6">
             You haven't placed any car rental reservations yet.
           </p>
@@ -109,7 +111,6 @@ const SelfBookingStatus = () => {
   return (
     <section className="min-h-screen bg-slate-50/70 py-10 px-4 sm:px-6 lg:px-8 text-slate-800">
       <div className="max-w-5xl mx-auto">
-        
         {/* Header Title */}
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -152,14 +153,16 @@ const SelfBookingStatus = () => {
                 <div className="flex items-center gap-3">
                   {getStatusBadge(booking.bookingStatus)}
                   <div className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-400 group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                    <ChevronRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                    <ChevronRight
+                      size={18}
+                      className="group-hover:translate-x-0.5 transition-transform"
+                    />
                   </div>
                 </div>
               </div>
 
               {/* Card Details Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
-                
                 {/* Vehicle */}
                 <div className="bg-slate-50/70 border border-slate-100 rounded-2xl p-3.5 group-hover:bg-white group-hover:border-slate-200 transition-colors">
                   <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5 mb-1">
@@ -178,11 +181,14 @@ const SelfBookingStatus = () => {
                     Pickup Date
                   </p>
                   <h4 className="font-semibold text-slate-900 text-sm">
-                    {new Date(booking.pickupDate).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {new Date(booking.pickupDate).toLocaleDateString(
+                      undefined,
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      },
+                    )}
                   </h4>
                 </div>
 
@@ -196,12 +202,10 @@ const SelfBookingStatus = () => {
                     ₹{booking.totalAmount}
                   </h4>
                 </div>
-
               </div>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );

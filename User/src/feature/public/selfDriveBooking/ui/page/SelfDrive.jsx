@@ -19,7 +19,7 @@ import {
   KeyRound,
 } from "lucide-react";
 import { useSelfDriveCars } from "../../hook/useSelfDriveCarsCrad";
-import SelfDriveBookingForm from "../../ui/page/SelfDriveBookingForm";
+
 import ApiState from "../../../../../shared/components/shared/ApiState";
 import SectionHeader from "../../../../../shared/components/ui/SectionHeader";
 import { Button, FilterPanel } from "../../../../../shared/components/ui";
@@ -32,6 +32,7 @@ import Drawer from "../../../../../shared/components/ui/Drawer";
 import useBookingModal from "../../../../../shared/hook/useBookingModal";
 import BookingModal from "../../../../../shared/components/ui/BookingModal";
 import VehicleSummary from "../../../../../shared/components/ui/VehicleSummary";
+import SelfDriveBookingForm from "../components/SelfDriveBookingForm";
 
 const SelfDrive = () => {
   const { cars, isLoading, isError, error, fetchCars } = useSelfDriveCars();
@@ -171,11 +172,10 @@ const SelfDrive = () => {
             vehicle={selectedVehicle}
           >
             <VehicleSummary vehicle={selectedVehicle} prices={prices} />
-            {/* 
-                              <BookingForm
-                                vehicle={selectedVehicle}
-                                onClose={closeBookingModal}
-                              /> */}
+            <SelfDriveBookingForm
+              vehicle={selectedVehicle}
+              onClose={closeBookingModal}
+            />
           </BookingModal>
         </div>
       </section>
