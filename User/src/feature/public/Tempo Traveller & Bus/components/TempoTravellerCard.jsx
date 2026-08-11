@@ -5,7 +5,7 @@ import { WHATSAPP_NUMBER } from "../../../../config/contact";
 
 const TempoTravellerCard = ({ vehicle }) => {
   const imageUrl = vehicle.image
-    ? `http://localhost:3000${vehicle.image}`
+    ? `${import.meta.env.VITE_API_URL}${vehicle.image}`
     : "https://placehold.co/600x400";
 
   const whatsapp = () => {

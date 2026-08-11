@@ -15,7 +15,7 @@ const VehicleSummary = ({
   const getImageSource = (src) => {
     if (!src)
       return "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=600&auto=format&fit=crop";
-    return src.startsWith("http") ? src : `http://localhost:3000${src}`;
+    return src.startsWith("http") ? src : `${import.meta.env.VITE_API_URL}${src}`;
   };
 
   const formattedPrice = vehicle.pricePerDay

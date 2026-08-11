@@ -6,7 +6,7 @@ import { WHATSAPP_NUMBER } from "../../../../../config/contact";
 
 const PremiumCarCard = ({ car }) => {
   const imageUrl = car?.image
-    ? `http://localhost:3000${car.image}`
+    ? `${import.meta.env.VITE_API_URL}${car.image}`
     : "https://placehold.co/600x400?text=Premium+Car";
 
   const whatsapp = () => {

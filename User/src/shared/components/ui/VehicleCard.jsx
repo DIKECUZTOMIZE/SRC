@@ -40,7 +40,7 @@ const VehicleCard = ({
 
   const image = vehicleImage?.startsWith("http")
     ? vehicleImage
-    : `http://localhost:3000${vehicleImage}`;
+    : `${import.meta.env.VITE_API_URL}${vehicleImage}`;
 
   const vehicleName = `${brand} ${model}`;
 
