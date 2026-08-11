@@ -20,7 +20,7 @@ import {
 
 import { createCarValidation } from "../../../schema/createCarValidation.js";
 import upload from "../../../middleware/multer.js";
-import { validate } from "../../../validator/validate .js";
+import { validate } from "../../../validator/validate.js";
 
 const router = express.Router();
 

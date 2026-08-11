@@ -3,7 +3,7 @@ import asyncHandler from "../../../shared/utils/asyncHandle.js";
 import { driverBookingSchema } from '../../../schema/normalDriver.schema.js'
 import { createDriverBooking, getAllCarsController } from './normalCarWithDriver.controller.js';
 import { authMiddleware } from '../../../middleware/auth.middleware.js';
-import { validate } from '../../../validator/validate .js';
+import { validate } from '../../../validator/validate.js';
 
 const router = express.Router();
 

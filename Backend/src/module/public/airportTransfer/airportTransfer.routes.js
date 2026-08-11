@@ -2,7 +2,7 @@ import express from "express";
 import asyncHandler from "../../../shared/utils/asyncHandle.js";
 import { createAirportTransferBooking, getAllAirportTransfer } from "./airportTransfer.controller.js";
 import { authMiddleware } from "../../../middleware/auth.middleware.js";
-import { validate } from "../../../validator/validate .js";
+import { validate } from "../../../validator/validate.js";
 import { airportTransferBookingSchema } from "../../../schema/airportTransfer.schema.js";
 
 
